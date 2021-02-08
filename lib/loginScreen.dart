@@ -21,11 +21,25 @@ class _loginScreenState extends State<loginScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFFbec4f8),
-            Color(0xFF6a6dde),
-            Color(0xFF6a6dde),
-            Color(0xFF4d42cf),
-            Color(0xFF713d90),
+
+            //BLUE
+            // Color(0xFFbec4f8),
+            // Color(0xFF6a6dde),
+            // Color(0xFF6a6dde),
+            // Color(0xFF4d42cf),
+            // Color(0xFF713d90),
+
+            //RED
+            // Color(0xFFaf0704),
+            // Color(0xFFb62810),
+            // Color(0xFFbc3f09),
+            // Color(0xFFc58b0e),
+
+            //lightblue
+            Color(0xFF2e4d5e),
+            Color(0xFF14575d),
+            Color(0xFF36aaa8),
+
           ],
         ),
       ),
@@ -269,8 +283,8 @@ class _loginScreenState extends State<loginScreen> {
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(
-                horizontal: 40.0,
-                vertical: 120.0,
+                horizontal: 30.0,
+                vertical: 100.0,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

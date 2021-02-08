@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/login': (context) => loginScreen(),
-        'swipeScreen': (context) => swipeScreen(),
+        '/swipeScreen': (context) => swipeScreen(),
       },
 
       title: "PickFlick",
