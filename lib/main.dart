@@ -28,10 +28,10 @@ class _MyAppState extends State<MyApp> {
       title: "PickFlick",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.red,
+        primaryColor: Colors.deepPurple,
         scaffoldBackgroundColor: Colors.purple,
       ),
-      home: loginScreen()
+      home: swipeScreen()
       ,
 
     );

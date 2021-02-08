@@ -77,7 +77,6 @@ class _loginScreenState extends State<loginScreen> {
             child: TextField(
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(color: Colors.black),
-              autofocus: false,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 fillColor: Colors.black,
@@ -115,7 +114,6 @@ class _loginScreenState extends State<loginScreen> {
             height: 60.0,
             child: TextField(
               obscureText: true,
-              autofocus: false,
               style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
