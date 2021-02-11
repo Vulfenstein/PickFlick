@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pick_flick/password_screen.dart';
 import 'package:pick_flick/swipe_screen.dart';
 import 'package:pick_flick/login_screen.dart';
 import 'package:pick_flick/sign_up_screen.dart';
@@ -20,10 +21,10 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/login': (context) => LoginScreen(),
-        '/swipeScreen': (context) => SwipeScreen(),
-        '/signUpScreen': (context) => SignUpScreen(),
+        '/SwipeScreen': (context) => SwipeScreen(),
+        '/SignUpScreen': (context) => SignUpScreen(),
+        '/PasswordScreen': (context) => PasswordScreen(),
       },
-
       title: "PickFlick",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
