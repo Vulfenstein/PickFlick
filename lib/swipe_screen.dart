@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 
-class swipeScreen extends StatefulWidget {
+class SwipeScreen extends StatefulWidget {
   @override
-  _swipeScreenState createState() => _swipeScreenState();
+  _SwipeScreenState createState() => _SwipeScreenState();
 }
 
-class _swipeScreenState extends State<swipeScreen> with TickerProviderStateMixin{
+class _SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin{
 
   List<String> movieposters=[
     "assets/images/blackpanter.jpg",
@@ -30,25 +30,10 @@ class _swipeScreenState extends State<swipeScreen> with TickerProviderStateMixin
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-
-              //BLUE
-              // Color(0xFFbec4f8),
-              // Color(0xFF6a6dde),
-              // Color(0xFF6a6dde),
-              // Color(0xFF4d42cf),
-              // Color(0xFF713d90),
-
-              //RED
-              // Color(0xFFaf0704),
-              // Color(0xFFb62810),
-              // Color(0xFFbc3f09),
-              // Color(0xFFc58b0e),
-
               //lightblue
               Color(0xFF2e4d5e),
               Color(0xFF14575d),
               Color(0xFF36aaa8),
-
             ],
           ),
         ),

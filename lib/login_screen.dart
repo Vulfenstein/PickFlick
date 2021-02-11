@@ -1,17 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pick_flick/password_screen.dart';
+import 'package:pick_flick/swipe_screen.dart';
+import 'package:pick_flick/sign_up_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class loginScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _loginScreenState createState() => _loginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
-  //variables
-  var _check_value = false;
+class _LoginScreenState extends State<LoginScreen> {
 
-  // Constructs Background
+  // ----------------------------------------------------------------------------//
+//  Variables
+// ----------------------------------------------------------------------------//
+  final _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  String value; // temp holder
+  String email;
+  String password;
+  String e; //error checking
+
+// ----------------------------------------------------------------------------//
+//  Build background color gradient
+// ----------------------------------------------------------------------------//
   _backgroundBuilder() {
     return Container(
       height: double.infinity,
@@ -21,35 +35,22 @@ class _loginScreenState extends State<loginScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-
-            //BLUE
-            // Color(0xFFbec4f8),
-            // Color(0xFF6a6dde),
-            // Color(0xFF6a6dde),
-            // Color(0xFF4d42cf),
-            // Color(0xFF713d90),
-
-            //RED
-            // Color(0xFFaf0704),
-            // Color(0xFFb62810),
-            // Color(0xFFbc3f09),
-            // Color(0xFFc58b0e),
-
             //lightblue
             Color(0xFF2e4d5e),
             Color(0xFF14575d),
             Color(0xFF36aaa8),
-
           ],
         ),
       ),
     );
   }
 
-  // Constructs Sign In
-  _signInBuilder() {
+// ----------------------------------------------------------------------------//
+//  Log in message at top of screen
+// ----------------------------------------------------------------------------//
+  _signInTextBuilder() {
     return Text(
-      "Sign In",
+      "Log In",
       style: TextStyle(
         color: Colors.white,
         fontFamily: 'Ubuntu-Regular',
@@ -59,7 +60,9 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
-  // Constructs Email Box
+// ----------------------------------------------------------------------------//
+//  'email' + email text box
+// ----------------------------------------------------------------------------//
   _emailBuilder() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,11 +95,17 @@ class _loginScreenState extends State<loginScreen> {
                 hintText: "Enter Email",
                 hintStyle: TextStyle(color: Colors.black),
               ),
+              onChanged: (value) {
+                email = value;
+              },
             )),
       ],
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  'password' + password box
+// ----------------------------------------------------------------------------//
   //Constructs password box
   _passwordBuilder() {
     return Column(
@@ -130,16 +139,24 @@ class _loginScreenState extends State<loginScreen> {
                 hintText: "Enter Password",
                 hintStyle: TextStyle(color: Colors.black),
               ),
+              onChanged: (value) {
+                password = value;
+              },
             )),
       ],
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  'forgot password text + link'
+// ----------------------------------------------------------------------------//
   _forgotPasswordBuilder() {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () => print("implement forgot password page"),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+          return new PasswordScreen();
+        },),),
         padding: EdgeInsets.only(right: 5.0),
         child: Text(
           "Forgot Password",
@@ -151,13 +168,147 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
-  _loginBuilder() {
+// ----------------------------------------------------------------------------//
+//  Alert message if email is not found in firebase
+// ----------------------------------------------------------------------------//
+  _emailNotFoundAlert(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Email Not Found"),
+      content: Text("Double check spelling."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  // ----------------------------------------------------------------------------//
+//  Alert message if password is incorrect
+// ----------------------------------------------------------------------------//
+  _incorrectPasswordAlert(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget forgotButton = FlatButton(
+      child: Text("Forgot Password?"),
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+          return new PasswordScreen();
+        },),);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Incorrect Password"),
+      content: Text("Double check spelling."),
+      actions: [
+        forgotButton,
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  // ----------------------------------------------------------------------------//
+//  Alert message if password is incorrect
+// ----------------------------------------------------------------------------//
+  _resetPasswordAlert(BuildContext context){
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: (){
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Too many attempts"),
+      content: Text("Link to reset password has been sent."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+// ----------------------------------------------------------------------------//
+//  Attempt to log into firebase with registered account
+// ----------------------------------------------------------------------------//
+  _firebaseLogin() async {
+    try {
+      final newUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      if (newUser != null) {
+        Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+          return new SwipeScreen();
+        },),);
+      }
+    } catch(e){
+      if(e.code == 'ERROR_USER_NOT_FOUND' || e.code == "ERROR_INVALID_EMAIL"){
+        _emailNotFoundAlert(context);
+      }
+      else if(e.code == 'ERROR_WRONG_PASSWORD'){
+        _incorrectPasswordAlert(context);
+      }
+      else if(e.code == 'ERROR_TOO_MANY_REQUESTS'){
+        try {
+          await _auth.sendPasswordResetEmail(email: email);
+        } catch(e){
+          print(e);
+        }
+        _resetPasswordAlert(context);
+      }
+      print(e);
+    }
+  }
+
+// ----------------------------------------------------------------------------//
+//  Log in button
+// ----------------------------------------------------------------------------//
+  _loginButtonBuilder() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print("implement login button"),
+        onPressed: () async {
+          _firebaseLogin();
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
@@ -176,6 +327,9 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  Google Login button
+// ----------------------------------------------------------------------------//
   _googleLoginBuilder(){
     return Container(
       child: OutlineButton(
@@ -209,6 +363,9 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
+  // ----------------------------------------------------------------------------//
+// Twitter login button
+// ----------------------------------------------------------------------------//
   _twitterLoginBuilder() {
     return Container(
       child: OutlineButton(
@@ -244,9 +401,14 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  Sign up for new account text + link
+// ----------------------------------------------------------------------------//
   _accountSignUpBuilder(){
     return GestureDetector(
-      onTap:() => print("implement sign up"),
+      onTap:() => Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new SignUpScreen();
+      },),),
       child: RichText(
         text: TextSpan(
           children: [
@@ -270,6 +432,9 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  login_screen.dart build method
+// ----------------------------------------------------------------------------//
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,13 +452,13 @@ class _loginScreenState extends State<loginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _signInBuilder(),
+                  _signInTextBuilder(),
                   SizedBox(height: 10.0),
                   _emailBuilder(),
                   SizedBox(height: 10.0),
                   _passwordBuilder(),
                   _forgotPasswordBuilder(),
-                  _loginBuilder(),
+                  _loginButtonBuilder(),
                   _googleLoginBuilder(),
                   SizedBox(height: 15.0),
                   _twitterLoginBuilder(),

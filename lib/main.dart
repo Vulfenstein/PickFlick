@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pick_flick/swipeScreen.dart';
-import 'package:pick_flick/loginScreen.dart';
-import 'package:firebase_core/firebase_core.dart';
-
+import 'package:pick_flick/swipe_screen.dart';
+import 'package:pick_flick/login_screen.dart';
+import 'package:pick_flick/sign_up_screen.dart';
 
 void main() async{
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -21,8 +19,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/login': (context) => loginScreen(),
-        '/swipeScreen': (context) => swipeScreen(),
+        '/login': (context) => LoginScreen(),
+        '/swipeScreen': (context) => SwipeScreen(),
+        '/signUpScreen': (context) => SignUpScreen(),
       },
 
       title: "PickFlick",
@@ -31,9 +30,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.deepPurple,
         scaffoldBackgroundColor: Colors.purple,
       ),
-      home: swipeScreen()
-      ,
-
+      home: LoginScreen(),
     );
   }
 }
