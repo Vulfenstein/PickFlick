@@ -5,6 +5,7 @@ import 'package:pick_flick/password_screen.dart';
 import 'package:pick_flick/swipe_screen.dart';
 import 'package:pick_flick/sign_up_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,8 +17,12 @@ class _LoginScreenState extends State<LoginScreen> {
   // ----------------------------------------------------------------------------//
 //  Variables
 // ----------------------------------------------------------------------------//
-  final _auth = FirebaseAuth.instance;
+  final _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  var twitterLogin = new TwitterLogin(
+    consumerKey: '<token 1>',
+    consumerSecret: '<token 2>',
+  );
   String value; // temp holder
   String email;
   String password;
@@ -272,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // ----------------------------------------------------------------------------//
   _firebaseLogin() async {
     try {
-      final newUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final newUser = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       if (newUser != null) {
         Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
           return new SwipeScreen();
@@ -287,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       else if(e.code == 'ERROR_TOO_MANY_REQUESTS'){
         try {
-          await _auth.sendPasswordResetEmail(email: email);
+          await _firebaseAuth.sendPasswordResetEmail(email: email);
         } catch(e){
           print(e);
         }
@@ -328,13 +333,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // ----------------------------------------------------------------------------//
+//  Sign in with Google function
+// ----------------------------------------------------------------------------//
+ _signInWithGoogle() async{
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+        idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+
+    final FirebaseUser user = (await _firebaseAuth.signInWithCredential(credential)).user;
+ }
+
+
+  // ----------------------------------------------------------------------------//
 //  Google Login button
 // ----------------------------------------------------------------------------//
   _googleLoginBuilder(){
     return Container(
       child: OutlineButton(
         splashColor: Colors.white,
-        onPressed: () => print("implement google button"),
+        onPressed: () async{
+          _signInWithGoogle();
+          if(await FirebaseAuth.instance.currentUser() != null){
+            Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return new SwipeScreen();
+            },),);
+          }
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
@@ -361,6 +387,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  // ----------------------------------------------------------------------------//
+//  Google Login function
+// ----------------------------------------------------------------------------//
+  _signInWithTwitter() async{
+    final TwitterLoginResult result = await twitterLogin.authorize();
+
+    //final FirebaseUser user = (await _firebaseAuth.signInWithCredential(result)).user;
   }
 
   // ----------------------------------------------------------------------------//
