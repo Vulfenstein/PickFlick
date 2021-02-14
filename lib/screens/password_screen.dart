@@ -7,6 +7,7 @@ import 'package:pick_flick/utilities/static_widgets.dart';
 import 'package:pick_flick/utilities/errors.dart';
 
 class PasswordScreen extends StatefulWidget {
+
   @override
   _PasswordScreenState createState() => _PasswordScreenState();
 }

@@ -160,6 +160,11 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 5.0,
         onPressed: () async {
           firebaseLogin(context, email, password);
+          if(await FirebaseAuth.instance.currentUser() != null){
+              Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return new SwipeScreen(movieInfo: movieData);
+            },),);
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -190,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
           signInWithGoogle();
           if(await FirebaseAuth.instance.currentUser() != null){
             Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-              return new SwipeScreen();
+              return new SwipeScreen(movieInfo: movieData);
             },),);
           }
         },

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pick_flick/screens/login_screen.dart';
 import 'package:pick_flick/screens/swipe_screen.dart';
 import 'package:pick_flick/utilities/errors.dart';
 
@@ -23,9 +24,7 @@ firebaseLogin(BuildContext context, String email, String password) async {
   try {
     final newUser = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     if (newUser != null) {
-        Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-          return new SwipeScreen();
-        },),);
+       return;
     }
   } catch(e){
 
@@ -89,7 +88,7 @@ firebaseSignup(context, String email, String password) async {
     final newUser = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
     if (newUser != null) {
       Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-        return new SwipeScreen();
+        return new LoginScreen();
       },),);
     }
   } catch(e){
