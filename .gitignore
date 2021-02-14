@@ -125,3 +125,5 @@ app.*.map.json
 
 #temporary bans
 assets/
+
+**/lib/utilites/constants.dart

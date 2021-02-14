@@ -21,5 +21,4 @@ class MovieAPI {
       print(response.statusCode);
     }
   }
-
 }

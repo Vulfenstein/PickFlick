@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pick_flick/utilities/constants.dart';
 
 // ----------------------------------------------------------------------------//
 //  Build background color gradient
@@ -13,9 +14,9 @@ backgroundBuilder() {
         end: Alignment.bottomCenter,
         colors: [
           //lightblue
-          Color(0xFF2e4d5e),
-          Color(0xFF14575d),
-          Color(0xFF36aaa8),
+          Color(BACKGROUND_COLOR_1),
+          Color(BACKGROUND_COLOR_2),
+          Color(BACKGROUND_COLOR_3),
         ],
       ),
     ),
@@ -23,26 +24,11 @@ backgroundBuilder() {
 }
 
 // ----------------------------------------------------------------------------//
-//  Log in message at top of screen
+//  Login/Signup message at top of screen
 // ----------------------------------------------------------------------------//
-signInTextBuilder() {
+textBuilder(String word) {
   return Text(
-    "Log In",
-    style: TextStyle(
-      color: Colors.white,
-      fontFamily: 'Ubuntu-Regular',
-      fontSize: 30.0,
-      fontWeight: FontWeight.bold,
-    ),
-  );
-}
-
-// ----------------------------------------------------------------------------//
-//  Sign up message at top of screen
-// ----------------------------------------------------------------------------//
-signUpTextBuilder() {
-  return Text(
-    "Sign Up",
+    '$word',
     style: TextStyle(
       color: Colors.white,
       fontFamily: 'Ubuntu-Regular',

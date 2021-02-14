@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/screens/swipe_screen.dart';
 import 'package:pick_flick/services/authentication.dart';
-import 'package:pick_flick/utilities/static_widgets.dart';
+import 'package:pick_flick/utilities/widgets.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -15,11 +13,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // ----------------------------------------------------------------------------//
 //  variables
 // ----------------------------------------------------------------------------//
-  final _auth = FirebaseAuth.instance;
-  String value;
-  String email;
-  String password;
-  String e;
+  String _email;
+  String _password;
 
 // ----------------------------------------------------------------------------//
 //  'email' + email text box
@@ -56,8 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 hintText: "Enter Email",
                 hintStyle: TextStyle(color: Colors.black),
               ),
-              onChanged: (value) {
-                email = value;
+              onChanged: (_value) {
+                _email = _value;
               },
             )),
       ],
@@ -99,8 +94,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 hintText: "Enter Password",
                 hintStyle: TextStyle(color: Colors.black),
               ),
-              onChanged: (value) {
-                password = value;
+              onChanged: (_value) {
+                _password = _value;
               },
             )),
       ],
@@ -117,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          firebaseSignup(context, email, password);
+          firebaseSignup(context, _email, _password);
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -157,7 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  signUpTextBuilder(),
+                  textBuilder('Sign Up'),
                   SizedBox(height: 50.0),
                   _emailBuilder(),
                   SizedBox(height: 10.0),

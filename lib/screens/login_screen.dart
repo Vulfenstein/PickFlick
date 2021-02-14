@@ -6,7 +6,8 @@ import 'package:pick_flick/screens/swipe_screen.dart';
 import 'package:pick_flick/screens/sign_up_screen.dart';
 import 'package:pick_flick/services/authentication.dart';
 import 'package:pick_flick/services/movie_api.dart';
-import 'package:pick_flick/utilities/static_widgets.dart';
+import 'package:pick_flick/utilities/widgets.dart';
+import 'package:pick_flick/utilities/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -21,23 +22,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // ----------------------------------------------------------------------------//
+//  Send url to API, create list of all movies
+// ----------------------------------------------------------------------------//
+  void omdb() async{
+    MovieAPI movieAPI = MovieAPI(MOVIE_API);
+    movieData = await movieAPI.getData();
+    List<MovieAPI> movies;
+    movies.add(movieData);
+  }
+
+  // ----------------------------------------------------------------------------//
 //  Variables
 // ----------------------------------------------------------------------------//
   String value; // temp holder
   String email;
   String password;
-  String e;
   var movieData;
-
-
-  // ----------------------------------------------------------------------------//
-//  Send url to API, create list of all movies
-// ----------------------------------------------------------------------------//
-  void omdb() async{
-    MovieAPI movieAPI = MovieAPI('');
-    movieData = await movieAPI.getData();
-    List<MovieAPI> movies;
-  }
 
 // ----------------------------------------------------------------------------//
 //  'email' + email text box
@@ -301,7 +301,6 @@ class _LoginScreenState extends State<LoginScreen> {
 // ----------------------------------------------------------------------------//
   @override
   Widget build(BuildContext context) {
-    omdb();
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -317,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  signInTextBuilder(),
+                  textBuilder('Sign In'),
                   SizedBox(height: 10.0),
                   _emailBuilder(),
                   SizedBox(height: 10.0),

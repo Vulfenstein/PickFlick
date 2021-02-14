@@ -1,10 +1,8 @@
-// add firebase authentication methods here.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pick_flick/screens/login_screen.dart';
-import 'package:pick_flick/screens/swipe_screen.dart';
 import 'package:pick_flick/utilities/errors.dart';
 
 // ----------------------------------------------------------------------------//
@@ -104,8 +102,3 @@ firebaseSignup(context, String email, String password) async {
     print(e);
   }
 }
-
-
-
-// Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-// return new SwipeScreen(movieInfo: movieData);
