@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/swipe_screen.dart';
+import 'package:pick_flick/screens/swipe_screen.dart';
+import 'package:pick_flick/services/authentication.dart';
+import 'package:pick_flick/utilities/static_widgets.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -18,43 +20,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String email;
   String password;
   String e;
-
-// ----------------------------------------------------------------------------//
-//  Build background color gradient
-// ----------------------------------------------------------------------------//
-  _backgroundBuilder() {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            //lightblue
-            Color(0xFF2e4d5e),
-            Color(0xFF14575d),
-            Color(0xFF36aaa8),
-          ],
-        ),
-      ),
-    );
-  }
-
-// ----------------------------------------------------------------------------//
-//  Sign up message at top of screen
-// ----------------------------------------------------------------------------//
-  _signUpTextBuilder() {
-    return Text(
-      "Sign Up",
-      style: TextStyle(
-        color: Colors.white,
-        fontFamily: 'Ubuntu-Regular',
-        fontSize: 30.0,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
 
 // ----------------------------------------------------------------------------//
 //  'email' + email text box
@@ -142,129 +107,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-// ----------------------------------------------------------------------------//
-//  Invalid email alert box
-// ----------------------------------------------------------------------------//
-  _emailInvalidAlert(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Invalid Format"),
-      content: Text("Please enter a valid email address."),
-      actions: [
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  // ----------------------------------------------------------------------------//
-//  weak password alert box
-// ----------------------------------------------------------------------------//
-  _badPasswordAlert(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Password too weak"),
-      content: Text("Please enter a stronger password."),
-      actions: [
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  // ----------------------------------------------------------------------------//
-//  email already in use alert box
-// ----------------------------------------------------------------------------//
-  _emailInUseAlert(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    Widget forgotButton = FlatButton(
-      child: Text("Forgot Password"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Email already in use"),
-      content: Text("Forgot password?"),
-      actions: [
-        forgotButton,
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-// ----------------------------------------------------------------------------//
-//  Sign up using password and email
-// ----------------------------------------------------------------------------//
-  _firebaseLogin() async {
-    try {
-      final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      if (newUser != null) {
-        Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-          return new SwipeScreen();
-        },),);
-      }
-    } catch(e){
-      if(e.code == "ERROR_INVALID_EMAIL"){
-        _emailInvalidAlert(context);
-      }
-      else if(e.code == "ERROR_WEAK_PASSWORD"){
-        _badPasswordAlert(context);
-      }
-      else if(e.code == "ERROR_EMAIL_ALREADY_IN_USE"){
-        _emailInUseAlert(context);
-      }
-      print(e);
-    }
-  }
-
   // ----------------------------------------------------------------------------//
 //  'email' + email text box
 // ----------------------------------------------------------------------------//
@@ -275,7 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          _firebaseLogin();
+          firebaseSignup(context, email, password);
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -303,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _backgroundBuilder(),
+          backgroundBuilder(),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(
@@ -315,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _signUpTextBuilder(),
+                  signUpTextBuilder(),
                   SizedBox(height: 50.0),
                   _emailBuilder(),
                   SizedBox(height: 10.0),

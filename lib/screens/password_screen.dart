@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/login_screen.dart';
+import 'package:pick_flick/screens/login_screen.dart';
+import 'package:pick_flick/services/authentication.dart';
+import 'package:pick_flick/utilities/static_widgets.dart';
+import 'package:pick_flick/utilities/errors.dart';
 
 class PasswordScreen extends StatefulWidget {
   @override
@@ -13,32 +16,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
   // ----------------------------------------------------------------------------//
 //  variables
 // ----------------------------------------------------------------------------//
-  final _auth = FirebaseAuth.instance;
   String value;
   String email;
   String e;
-
-// ----------------------------------------------------------------------------//
-//  Build background color gradient
-// ----------------------------------------------------------------------------//
-  _backgroundBuilder() {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            //lightblue
-            Color(0xFF2e4d5e),
-            Color(0xFF14575d),
-            Color(0xFF36aaa8),
-          ],
-        ),
-      ),
-    );
-  }
 
 // ----------------------------------------------------------------------------//
 //  Sign up message at top of screen
@@ -98,78 +78,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
     );
   }
 
-// ----------------------------------------------------------------------------//
-//  Invalid email alert box
-// ----------------------------------------------------------------------------//
-  _emailInvalidAlert(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Invalid Format"),
-      content: Text("Please enter a valid email address."),
-      actions: [
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  // ----------------------------------------------------------------------------//
-//  Invalid email alert box
-// ----------------------------------------------------------------------------//
-  _confirmationAlert(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Email Sent"),
-      content: Text("Follow steps provided in email."),
-      actions: [
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-// ----------------------------------------------------------------------------//
-//  Sign up using password and email
-// ----------------------------------------------------------------------------//
-  _firebaseLogin() async {
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
-      _confirmationAlert(context);
-    } catch(e){
-      print(e);
-    }
-  }
-
   // ----------------------------------------------------------------------------//
 //  'email' + email text box
 // ----------------------------------------------------------------------------//
@@ -180,7 +88,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-         _firebaseLogin();
+         firebaseResetPassword(context, email);
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -240,7 +148,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _backgroundBuilder(),
+          backgroundBuilder(),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pick_flick/password_screen.dart';
-import 'package:pick_flick/swipe_screen.dart';
-import 'package:pick_flick/login_screen.dart';
-import 'package:pick_flick/sign_up_screen.dart';
+import 'package:pick_flick/screens/password_screen.dart';
+import 'package:pick_flick/screens/swipe_screen.dart';
+import 'package:pick_flick/screens/login_screen.dart';
+import 'package:pick_flick/screens/sign_up_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.deepPurple,
         scaffoldBackgroundColor: Colors.purple,
       ),
-      home: LoginScreen(),
+      home: new LoginScreen(),
     );
   }
 }

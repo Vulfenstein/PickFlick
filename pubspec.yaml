@@ -28,6 +28,9 @@ dev_dependencies:
   firebase_auth: ^0.14.0+5
   google_sign_in: ^4.5.9
   flutter_twitter_login: ^1.1.0
+  http: ^0.12.2
+  omdb_dart: ^0.0.2
+
 
 
 # For information on the generic Dart part of this file, see the

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:pick_flick/models/movies.dart';
+import 'package:pick_flick/services/movie_api.dart';
 
 class SwipeScreen extends StatefulWidget {
+
+  SwipeScreen({this.movieInfo});
+  final movieInfo;
+
   @override
   _SwipeScreenState createState() => _SwipeScreenState();
 }
@@ -55,7 +61,7 @@ class _SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin
               cardBuilder: (context, index)=>Card(
                 child: Padding(
                   padding: EdgeInsets.all(2.0),
-                  child: Image.asset('${movieposters[index]}',
+                  child: Image.network('${widget.movieInfo['Poster']}',
                     fit: BoxFit.fill,
                   ),
                 ),
