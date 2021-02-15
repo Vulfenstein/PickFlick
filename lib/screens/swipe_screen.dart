@@ -1,84 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:pick_flick/models/movies.dart';
+import 'package:pick_flick/screens/uniq_movie_screen.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:pick_flick/utilities/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SwipeScreen extends StatefulWidget {
 
-  SwipeScreen({this.movieInfo});
-  final movieInfo;
-
   @override
-  _SwipeScreenState createState() => _SwipeScreenState();
+  SwipeScreenState createState() {
+    return new SwipeScreenState();
+  }
 }
 
-class _SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin{
+class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin {
+  var movies;
+  var index;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Pick Flick"),
+  void getData() async {
+    var data = await getJson();
 
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              //lightblue
-              Color(BACKGROUND_COLOR_1),
-              Color(BACKGROUND_COLOR_2),
-              Color(BACKGROUND_COLOR_3),
-            ],
-          ),
-        ),
-        child: Center(
-          child: Container(
-            height: MediaQuery.of(context).size.height*0.9,
-            child: new TinderSwapCard(
-              totalNum: 10,
-              stackNum: 3,
-              orientation: AmassOrientation.TOP,
-              maxWidth: MediaQuery.of(context).size.width*0.9,
-              maxHeight: MediaQuery.of(context).size.width*5,
-              minWidth: MediaQuery.of(context).size.width*0.8,
-              minHeight: MediaQuery.of(context).size.width*0.8,
+    setState(() {
+      movies = data['results'];
+    });
+  }
 
-              // Construct new cards
-              cardBuilder: (context, index)=>Card(
+  Future<Map> getJson() async {
+    try {
+      var _apiKey = TMDB_V3;
+      var url = URL + _apiKey;
+      var response = await http.get(url);
+      return json.decode(response.body);
+    } catch(e){
+      print(e);
+    }
+  }
+
+  // ----------------------------------------------------------------------------//
+//  Constructs cards for swiping
+// ----------------------------------------------------------------------------//
+  _cardBuilding() {
+    return Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.9,
+          child: new TinderSwapCard(
+            totalNum: movies != null ? movies.length : 0,
+            stackNum: 3,
+            orientation: AmassOrientation.TOP,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+            maxHeight: MediaQuery.of(context).size.width * 2,
+            minWidth: MediaQuery.of(context).size.width * 0.8,
+            minHeight: MediaQuery.of(context).size.width * 0.8,
+
+            // Construct new cards
+            cardBuilder: (context, index) => FlatButton(
+              child: Card(
+                elevation: 20.0,
                 child: Padding(
-                  padding: EdgeInsets.all(2.0),
-                  child: Image.network('${widget.movieInfo['Poster']}',
+                  padding: EdgeInsets.all(1.5),
+                  child: Image.network(
+                     IMAGEURL + movies[index]['poster_path'],
                     fit: BoxFit.fill,
                   ),
                 ),
-                elevation: 20.0,
               ),
-
-              //Track swipe direction
-              // cardController: CardController(),
-              // swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
-              //   if (align.x < 0){
-              //     print("swipped left");
-              //   }
-              //   else if(align.x > 0){
-              //     print("swipped right");
-              //   }
-              // },
-
-              //Get orientation and index of swipped card
-              swipeCompleteCallback: (CardSwipeOrientation orientation, int index){
-                var currentIndex = index;
-                print("$currentIndex ${orientation.toString()}");
-              },
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+                return new MovieScreen(movies[index]);
+              },),),
             ),
+
+            //Get orientation and index of swiped card
+            swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
+              var currentIndex = index;
+              print("$currentIndex ${orientation.toString()}");
+            },
           ),
         ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    getData();
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text("Pick Flick"),
+      ),
+      body: Stack(
+        children: <Widget>[
+            backgroundBuilder(),
+            _cardBuilding(),
+        ],
       ),
     );
   }

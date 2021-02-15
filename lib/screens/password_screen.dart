@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pick_flick/screens/login_screen.dart';
 import 'package:pick_flick/services/authentication.dart';
 import 'package:pick_flick/utilities/widgets.dart';
-import 'package:pick_flick/utilities/errors.dart';
 
 class PasswordScreen extends StatefulWidget {
 

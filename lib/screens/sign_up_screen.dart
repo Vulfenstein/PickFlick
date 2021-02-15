@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_flick/services/authentication.dart';
 import 'package:pick_flick/utilities/widgets.dart';

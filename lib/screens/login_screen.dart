@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/screens/password_screen.dart';
-import 'package:pick_flick/screens/swipe_screen.dart';
-import 'package:pick_flick/screens/sign_up_screen.dart';
+import 'package:pick_flick/utilities/exports.dart';
 import 'package:pick_flick/services/authentication.dart';
-import 'package:pick_flick/services/movie_api.dart';
 import 'package:pick_flick/utilities/widgets.dart';
-import 'package:pick_flick/utilities/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,21 +11,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-  void initState(){
-    omdb();
-    super.initState();
-  }
-
-  // ----------------------------------------------------------------------------//
-//  Send url to API, create list of all movies
-// ----------------------------------------------------------------------------//
-  void omdb() async{
-    MovieAPI movieAPI = MovieAPI(MOVIE_API);
-    movieData = await movieAPI.getData();
-    List<MovieAPI> movies;
-    movies.add(movieData);
-  }
 
   // ----------------------------------------------------------------------------//
 //  Variables
@@ -162,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
           firebaseLogin(context, email, password);
           if(await FirebaseAuth.instance.currentUser() != null){
               Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-              return new SwipeScreen(movieInfo: movieData);
+              return new SwipeScreen();
             },),);
           }
         },
@@ -195,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
           signInWithGoogle();
           if(await FirebaseAuth.instance.currentUser() != null){
             Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-              return new SwipeScreen(movieInfo: movieData);
+              return new SwipeScreen();
             },),);
           }
         },
