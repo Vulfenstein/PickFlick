@@ -1,24 +1,20 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:pick_flick/services/network.dart';
+import 'package:pick_flick/utilities/constants.dart';
 
-// ----------------------------------------------------------------------------//
-//  Given url, retrieve movie information, return decoded JSON.
-// ----------------------------------------------------------------------------//
 class MovieAPI {
 
-  MovieAPI(this.url);
+  Future<dynamic> getMovies() async{
+    Network network = Network('$URL$TMDB_V3');
 
-  final String url;
-
-  getData() async{
-    http.Response response = await http.get(url);
-
-    if(response.statusCode == 200) {
-      String data = response.body;
-      return jsonDecode(data);
-    }
-    else{
-      print(response.statusCode);
-    }
+    var movieData = await network.getData();
+    return movieData;
   }
+
+  Future<dynamic> getSingleMovie(String movieId) async {
+    String temp = movieId;
+    Network network = Network('$SMOVIEURL$TMDB_V3');
+    var singleData = await network.getData();
+    return singleData;
+  }
+
 }

@@ -8,6 +8,11 @@ const String IMAGEURL = 'https://image.tmdb.org/t/p/w500/';
 
 const String URL = 'http://api.themoviedb.org/3/discover/movie?api_key=';
 
+const String SMOVIEURL = 'https://api.themoviedb.org/3/movie/157336?api_key=';
+
+
+
+
 const BACKGROUND_COLOR_1 = 0xFF2e4d5e;
 
 const BACKGROUND_COLOR_2 = 0xFF14575d;

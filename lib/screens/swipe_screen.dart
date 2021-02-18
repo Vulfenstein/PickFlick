@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/screens/uniq_movie_screen.dart';
+import 'package:pick_flick/services/movie_api.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:pick_flick/utilities/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +19,7 @@ class SwipeScreen extends StatefulWidget {
 class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin {
   var movies;
   var index;
+  List<int> selectionIds = [];
 
   void getData() async {
     var data = await getJson();
@@ -33,6 +36,23 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
       var response = await http.get(url);
       return json.decode(response.body);
     } catch(e){
+      print(e);
+    }
+  }
+
+//  // MovieList single = MovieList();
+// void getMovieList() async{
+//   var result = await MovieAPI().getMovies();
+//   print(result);
+//   setState(() {
+//     movies = MovieList.fromJson(result);
+//   });
+// }
+  void trackSelections(int value){
+    print(value);
+    try {
+      selectionIds.add(value);
+    }catch(e){
       print(e);
     }
   }
@@ -61,7 +81,7 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
                 child: Padding(
                   padding: EdgeInsets.all(1.5),
                   child: Image.network(
-                     IMAGEURL + movies[index]['poster_path'],
+                    IMAGEURL + movies[index]['poster_path'],
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -75,6 +95,9 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
             swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
               var currentIndex = index;
               print("$currentIndex ${orientation.toString()}");
+              if(orientation == CardSwipeOrientation.RIGHT){
+                trackSelections(movies[index]['id']);
+              }
             },
           ),
         ),
@@ -91,8 +114,8 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
       ),
       body: Stack(
         children: <Widget>[
-            backgroundBuilder(),
-            _cardBuilding(),
+          backgroundBuilder(),
+          _cardBuilding(),
         ],
       ),
     );
