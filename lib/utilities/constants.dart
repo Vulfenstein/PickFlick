@@ -12,6 +12,8 @@ const String MOVIE_URL = 'https://api.themoviedb.org/3/movie/';
 
 const String API_ATTACHMENT = '?api_key=';
 
+const String TRAILER_URL = '/videos';
+
 const String WHERE_TO_WATCH_URL= '/watch/providers';
 
 //where to watch url total

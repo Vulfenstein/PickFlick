@@ -31,8 +31,7 @@ dev_dependencies:
   http: ^0.12.2
   palette_generator: ^0.2.3
   flutter_star_rating: ^0.0.3
-
-
+  youtube_player_flutter: ^7.0.0+7
 
 
 
