@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pick_flick/services/authentication.dart';
 import 'package:pick_flick/utilities/widgets.dart';
+import 'package:pick_flick/screens/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -131,6 +132,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  'email' + email text box
+// ----------------------------------------------------------------------------//
+  _returnButtonBuilder() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            return new LoginScreen();
+          },),);
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          "Return to Login",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 15.0,
+            letterSpacing: 1.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
 // ----------------------------------------------------------------------------//
 //  Sign up Screen builder
 // ----------------------------------------------------------------------------//
@@ -157,7 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 10.0),
                   _passwordBuilder(),
                   _signUpButtonBuilder(),
-                  SizedBox(height: 15.0),
+                  _returnButtonBuilder(),
                   SizedBox(height: 110.0),
                 ],
               ),

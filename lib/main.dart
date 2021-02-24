@@ -29,8 +29,8 @@ class _MyAppState extends State<MyApp> {
       title: "PickFlick",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.deepPurple,
-        scaffoldBackgroundColor: Colors.purple,
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
       ),
       home: new LoginScreen(),
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/utilities/exports.dart';
-import 'package:pick_flick/services/authentication.dart';
-import 'package:pick_flick/utilities/widgets.dart';
+import 'package:pick_flick/screens/screens_export.dart';
+import 'package:pick_flick/services/services_export.dart';
+import 'package:pick_flick/utilities/utilities_export.dart';
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -190,10 +191,10 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Image(
-              //   image: AssetImage("assets/images/google_logo.png"),
-              //   height: 25.0,
-              // ),
+              Image(
+                image: AssetImage("assets/images/google_logo.png"),
+                height: 25.0,
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
@@ -228,10 +229,10 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Image(
-              //   image: AssetImage("assets/images/twiiter_logo.png"),
-              //   height: 28.0,
-              // ),
+              Image(
+                image: AssetImage("assets/images/twiiter_logo.png"),
+                height: 28.0,
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(

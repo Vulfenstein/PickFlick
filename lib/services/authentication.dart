@@ -73,7 +73,12 @@ firebaseResetPassword(BuildContext context, String email) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
     confirmationAlert(context);
   } catch(e){
-    print(e);
+    if(e.code == "ERROR_INVALID_EMAIL"){
+      emailInvalidAlert(context);
+    }
+    else if(e.code == "ERROR_USER_NOT_FOUND"){
+      emailNotFoundAlert(context);
+    }
   }
 }
 

@@ -6,12 +6,16 @@ const String TMDB_V3 = '5e616632503c1f473c5ede5d5721f0a8';
 
 const String IMAGEURL = 'https://image.tmdb.org/t/p/w500/';
 
-const String URL = 'http://api.themoviedb.org/3/discover/movie?api_key=';
+const String DISCOVER_URL = 'http://api.themoviedb.org/3/discover/movie?api_key=';
 
-const String SMOVIEURL = 'https://api.themoviedb.org/3/movie/157336?api_key=';
+const String MOVIE_URL = 'https://api.themoviedb.org/3/movie/';
 
+const String API_ATTACHMENT = '?api_key=';
 
+const String WHERE_TO_WATCH_URL= '/watch/providers';
 
+//where to watch url total
+//https://api.themoviedb.org/3/movie/157336/watch/providers?api_key=5e616632503c1f473c5ede5d5721f0a8
 
 const BACKGROUND_COLOR_1 = 0xFF2e4d5e;
 
