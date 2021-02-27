@@ -1,30 +1,30 @@
 import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_response_status.dart';
-import 'package:pick_flick/models/movie_list_model.dart';
+import 'package:pick_flick/models/movie_detail.dart';
 import 'package:pick_flick/repository/movie_repository.dart';
 import 'dart:async';
 
-class MovieBloc {
+class IndividualMovieBloc {
   MovieRepository _movieRepository;
 
   StreamController _movieListController;
 
-  StreamSink<ApiResponse<List<Movie>>> get movieListSink =>
+  StreamSink<ApiResponse<MovieDetail>> get movieListSink =>
       _movieListController.sink;
 
-  Stream<ApiResponse<List<Movie>>> get movieListStream =>
+  Stream<ApiResponse<MovieDetail>> get movieListStream =>
       _movieListController.stream;
 
-  MovieBloc() {
-    _movieListController = StreamController<ApiResponse<List<Movie>>>();
+  IndividualMovieBloc(int id) {
+    _movieListController = StreamController<ApiResponse<MovieDetail>>();
     _movieRepository = MovieRepository();
-    fetchMovieList();
+    fetchMovie(id);
   }
 
-  fetchMovieList() async {
-    movieListSink.add(ApiResponse.loading('Fetching Movies'));
+  fetchMovie(int id) async {
+    movieListSink.add(ApiResponse.loading('Fetching Movie Details'));
     try {
-      List<Movie> movies = await _movieRepository.fetchMovieList();
-      movieListSink.add(ApiResponse.completed(movies));
+      MovieDetail movie = await _movieRepository.fetchMovieDetails(id);
+      movieListSink.add(ApiResponse.completed(movie));
     } catch (e) {
       movieListSink.add(ApiResponse.error(e.toString()));
       print(e);

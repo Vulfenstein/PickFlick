@@ -3,8 +3,10 @@ import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import  'package:pick_flick/utilities/widgets.dart';
 import 'package:pick_flick/screens/uniq_movie_screen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:pick_flick/models/movie_list_model.dart';
+import 'package:pick_flick/bloc/movie_bloc.dart';
+import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_response_status.dart';
+
 
 class SwipeScreen extends StatefulWidget {
 
@@ -15,46 +17,93 @@ class SwipeScreen extends StatefulWidget {
 }
 
 
-//GET MORE CARDS
-//&page=NUMBER
-
 class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin {
-  var movies;
-  var index;
-  int count;
-  List<int> selectionIds = [];
 
-  Future getData() async {
-    var data = await getJson();
-    movies = data['results'];
-    return movies;
+  MovieBloc _bloc;
+
+  void initState() {
+    super.initState();
+    _bloc = MovieBloc();
   }
 
-  // ignore: missing_return
-  Future<Map> getJson() async {
-    try {
-      var _apiKey = TMDB_V3;
-      var url = DISCOVER_URL + _apiKey;
-      var response = await http.get(url);
-      return json.decode(response.body);
-    } catch(e){
-      print(e);
-    }
-  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: Text('Pick Flick',),
+        ),
+        body: Stack(
+            children: <Widget>[
+              backgroundBuilder(),
+              StreamBuilder<ApiResponse<List<Movie>>>(
+                stream: _bloc.movieListStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Loading();
+                      case Status.COMPLETED:
+                        return CardBuilder(movies: snapshot.data.data);
+                    //return cardBuilder(movieList: snapshot.data.data);
+                      case Status.ERROR:
+                        return Error(
+                          errorMessage: snapshot.data.message,
+                          onRetryPressed: () => _bloc.fetchMovieList(),
+                        );
+                        break;
+                    }
+                  }
+                  return Container();
+                },
+              )
+            ]
+        )
 
-  void trackSelections(int value){
-    print(value);
-    try {
-      selectionIds.add(value);
-    }catch(e){
-      print(e);
-    }
+    );
   }
+}
 
-  // ----------------------------------------------------------------------------//
+class Error extends StatelessWidget {
+  final String errorMessage;
+  final Function onRetryPressed;
+
+  const Error({Key key, this.errorMessage, this.onRetryPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(errorMessage, textAlign: TextAlign.center, style: TextStyle(color: Colors.red, fontSize: 24),),
+          SizedBox(height: 10,),
+          RaisedButton(onPressed: onRetryPressed, color: Colors.blue,),
+        ],
+      ),
+    );
+  }
+}
+
+class Loading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+// ----------------------------------------------------------------------------//
 //  Constructs cards for swiping
 // ----------------------------------------------------------------------------//
-  _cardBuilding() {
+
+class CardBuilder extends StatelessWidget {
+  final List<Movie> movies;
+
+  const CardBuilder({Key key, this.movies}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
@@ -70,32 +119,33 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
               minHeight: MediaQuery.of(context).size.width * 0.8,
 
               // Construct new cards
-              cardBuilder: (context, index) => FlatButton(
-                child: Card(
-                  elevation: 100.0,
-                  child: Padding(
-                    padding: EdgeInsets.all(1.5),
-                    child: Image.network(
-                      IMAGEURL + movies[index]['poster_path'],
-                      fit: BoxFit.fill,
+              cardBuilder: (context, index) =>
+                  FlatButton(
+                    child: Card(
+                      elevation: 100.0,
+                      child: Padding(
+                        padding: EdgeInsets.all(1.5),
+                        child: Image.network(
+                          IMAGEURL + movies[index].posterPath,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                          builder: (BuildContext context) {
+                            return new MovieScreen(movies[index].id);
+                          },),),
                   ),
-                ),
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-                  return new MovieScreen(movies[index]['id']);
-                },),),
-              ),
 
               //Get orientation and index of swiped card
-              swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
-                  var currentIndex = index;
-                  if(currentIndex <= index -1){
-                    getData();
-                  }
-                  print("$currentIndex ${orientation.toString()}");
-                  if(orientation == CardSwipeOrientation.RIGHT){
-                    trackSelections(movies[index]['id']);
-                  }
+              swipeCompleteCallback: (CardSwipeOrientation orientation,
+                  int index) {
+                var currentIndex = index;
+                print("$currentIndex ${orientation.toString()}");
+                if (orientation == CardSwipeOrientation.RIGHT) {
+                  print('hello');
+                }
               },
             ),
           ),
@@ -103,26 +153,9 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
       ],
     );
   }
-
-  @override
-  Widget build(BuildContext context) => FutureBuilder(
-      future: getData(),
-      builder: (context, snapshot) {
-  if(snapshot.hasData) {
-    return new Scaffold(
-      appBar: AppBar(
-        title: Text("Pick Flick"),
-      ),
-      body: Stack(
-        children: <Widget>[
-          backgroundBuilder(),
-          _cardBuilding(),
-        ],
-      ),
-    );
-  }
-  else{
-    return Center(child: CircularProgressIndicator());
-  }
-  },);
 }
+
+
+
+
+

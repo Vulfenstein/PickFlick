@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pick_flick/networks/api_response_status.dart';
+import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_response_status.dart';
 import 'package:pick_flick/bloc/movie_bloc.dart';
-import 'package:pick_flick/models/movie_model.dart';
+import 'package:pick_flick/models/movie_list_model.dart';
 
 class MovieScreen extends StatefulWidget {
   @override

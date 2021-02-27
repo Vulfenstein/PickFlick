@@ -1,57 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:pick_flick/models/movie_detail.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:pick_flick/bloc/individual_movie_bloc.dart';
+import  'package:pick_flick/utilities/widgets.dart';
+
+import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_response_status.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // ignore: must_be_immutable
-class MovieScreen extends StatefulWidget {
+class MovieeScreen extends StatefulWidget {
   int movieId;
-  MovieScreen(this.movieId);
+  MovieeScreen(this.movieId);
 
   @override
   _MovieScreenState createState() => _MovieScreenState();
 }
 
-class _MovieScreenState extends State<MovieScreen> {
+class _MovieScreenState extends State<MovieeScreen> {
   YoutubePlayerController _controller;
   PaletteColor colors;
   var detail;
   var movieTrailer;
+  IndividualMovieBloc _bloc;
 
   void initState() {
     super.initState();
+    _bloc = IndividualMovieBloc(widget.movieId);
   }
 
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
-
     super.dispose();
-  }
-
-// ----------------------------------------------------------------------------//
-//  Get detailed movie data
-// ----------------------------------------------------------------------------//
-  Future getData() async {
-    var data = await getJson();
-    detail = data;
-    return detail;
-  }
-
-  // ignore: missing_return
-  Future<Map> getJson() async {
-    try {
-      var url =
-          MOVIE_URL + widget.movieId.toString() + API_ATTACHMENT + API_KEY;
-      var response = await http.get(url);
-      return json.decode(response.body);
-    } catch (e) {
-      print(e);
-    }
   }
 
   // ----------------------------------------------------------------------------//
@@ -86,14 +72,14 @@ class _MovieScreenState extends State<MovieScreen> {
   _backgroundBuilder() {
     return BoxDecoration(
         gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [
-        Color(BACKGROUND_COLOR_1),
-        Color(BACKGROUND_COLOR_2),
-        Color(BACKGROUND_COLOR_3),
-      ],
-    ));
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(BACKGROUND_COLOR_1),
+            Color(BACKGROUND_COLOR_2),
+            Color(BACKGROUND_COLOR_3),
+          ],
+        ));
   }
 
 // ----------------------------------------------------------------------------//
@@ -212,106 +198,124 @@ class _MovieScreenState extends State<MovieScreen> {
 // ----------------------------------------------------------------------------//
 //  Play youtube videos
 // ----------------------------------------------------------------------------//
-_videoPlayer(){
-  return FutureBuilder(
-    future: getTrailerData(),
-    builder: (context, snap) {
-      if ((snap.connectionState == ConnectionState.done) && movieTrailer['results'][0]['key'] != null) {
-        _controller = YoutubePlayerController(
-            initialVideoId: movieTrailer['results'][0]['key'],
-            flags: YoutubePlayerFlags(
-              autoPlay: false,
-              mute: false,
-            ));
-        return Container(
-          width: 400.0,
-          height: 420.0,
-          child: YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
-            progressIndicatorColor: Colors.amber,
-            onReady: (){
-              print("player ready");
-            },
-          ),
-        );
-      } else {
-        return Image.network(
-          IMAGEURL + detail['poster_path'],
-          height: 450.0,
-          width: 400.0,
-          fit: BoxFit.fill,
-        );
-      }
-    },
-  );
-}
+  _videoPlayer(){
+    return FutureBuilder(
+      future: getTrailerData(),
+      builder: (context, snap) {
+        if ((snap.connectionState == ConnectionState.done) && movieTrailer['results'][0]['key'] != null) {
+          _controller = YoutubePlayerController(
+              initialVideoId: movieTrailer['results'][0]['key'],
+              flags: YoutubePlayerFlags(
+                autoPlay: false,
+                mute: false,
+              ));
+          return Container(
+            width: 400.0,
+            height: 420.0,
+            child: YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.amber,
+              onReady: (){
+                print("player ready");
+              },
+            ),
+          );
+        } else {
+          return Image.network(
+            IMAGEURL + detail['poster_path'],
+            height: 450.0,
+            width: 400.0,
+            fit: BoxFit.fill,
+          );
+        }
+      },
+    );
+  }
+
+
 
 // ----------------------------------------------------------------------------//
 //  Build Context
 // ----------------------------------------------------------------------------//
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-      future: getData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            body: Stack(
-              children: <Widget>[
-                Scaffold(
-                  // backgroundColor: Colors.transparent,
-                  appBar: AppBar(
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                    ),
-                    backgroundColor: Colors.transparent,
-                    //elevation: 0.0,
-                  ),
-                ),
-                Container(
-                  decoration: _backgroundBuilder(),
-                  child: SafeArea(
-                    child: Container(
-                      width: double.infinity,
-                      height: 735.2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          _videoPlayer(),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          _titleBuilder(),
-                          SizedBox(
-                            height: 7.0,
-                          ),
-                          _ratingBuilder(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          _runtimeBuilder(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          _releaseDateBuilder(),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          _overviewBuilder(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      });
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: Text('Pick Flick',),
+        ),
+        body: Stack(
+            children: <Widget>[
+              backgroundBuilder(),
+              StreamBuilder<ApiResponse<MovieDetail>>(
+                stream: _bloc.movieListStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Loading();
+                      case Status.COMPLETED:
+                        return MovieInfo(movieInfo: snapshot.data.data);
+                    //return cardBuilder(movieList: snapshot.data.data);
+                      case Status.ERROR:
+                        return Error(
+                          errorMessage: snapshot.data.message,
+                          onRetryPressed: () => _bloc.fetchMovie(widget.movieId),
+                        );
+                        break;
+                    }
+                  }
+                  return Container();
+                },
+              )
+            ]
+        )
+
+    );
+  }
+}
+
+class MovieInfo extends StatelessWidget{
+
+  final MovieDetail movieInfo;
+
+  const MovieInfo({Key key, this.movieInfo}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Center(
+      child: Text(movieInfo.title),
+    );
+  }
+}
+
+class Loading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class Error extends StatelessWidget {
+  final String errorMessage;
+  final Function onRetryPressed;
+
+  const Error({Key key, this.errorMessage, this.onRetryPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(errorMessage, textAlign: TextAlign.center, style: TextStyle(color: Colors.red, fontSize: 24),),
+          SizedBox(height: 10,),
+          RaisedButton(onPressed: onRetryPressed, color: Colors.blue,),
+        ],
+      ),
+    );
+  }
 }

@@ -7,8 +7,8 @@ import 'package:pick_flick/utilities/login_errors.dart';
 // ----------------------------------------------------------------------------//
 //  Variables
 // ----------------------------------------------------------------------------//
-  final _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+final _firebaseAuth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 // var twitterLogin = new TwitterLogin(
 //   consumerKey: '<token 1>',
 //   consumerSecret: '<token 2>',
@@ -19,22 +19,20 @@ import 'package:pick_flick/utilities/login_errors.dart';
 // ----------------------------------------------------------------------------//
 firebaseLogin(BuildContext context, String email, String password) async {
   try {
-    final newUser = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    final newUser = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
     if (newUser != null) {
-       return;
+      return;
     }
-  } catch(e){
-
-    if(e.code == 'ERROR_USER_NOT_FOUND' || e.code == "ERROR_INVALID_EMAIL"){
+  } catch (e) {
+    if (e.code == 'ERROR_USER_NOT_FOUND' || e.code == "ERROR_INVALID_EMAIL") {
       emailNotFoundAlert(context);
-    }
-    else if(e.code == 'ERROR_WRONG_PASSWORD'){
+    } else if (e.code == 'ERROR_WRONG_PASSWORD') {
       incorrectPasswordAlert(context);
-    }
-    else if(e.code == 'ERROR_TOO_MANY_REQUESTS'){
+    } else if (e.code == 'ERROR_TOO_MANY_REQUESTS') {
       try {
         await _firebaseAuth.sendPasswordResetEmail(email: email);
-      } catch(e){
+      } catch (e) {
         print(e);
       }
       passwordLockAlert(context);
@@ -46,20 +44,21 @@ firebaseLogin(BuildContext context, String email, String password) async {
 // ----------------------------------------------------------------------------//
 //  Google authentication function
 // ----------------------------------------------------------------------------//
-signInWithGoogle() async{
+signInWithGoogle() async {
   final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
   final AuthCredential credential = GoogleAuthProvider.getCredential(
       idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-  final FirebaseUser user = (await _firebaseAuth.signInWithCredential(credential)).user;
+  final FirebaseUser user =
+      (await _firebaseAuth.signInWithCredential(credential)).user;
 }
 
 // ----------------------------------------------------------------------------//
 //  Twitter authentication function
 // ----------------------------------------------------------------------------//
-_signInWithTwitter() async{
+_signInWithTwitter() async {
   //final TwitterLoginResult result = await twitterLogin.authorize();
 
   //final FirebaseUser user = (await _firebaseAuth.signInWithCredential(result)).user;
@@ -72,11 +71,10 @@ firebaseResetPassword(BuildContext context, String email) async {
   try {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
     confirmationAlert(context);
-  } catch(e){
-    if(e.code == "ERROR_INVALID_EMAIL"){
+  } catch (e) {
+    if (e.code == "ERROR_INVALID_EMAIL") {
       emailInvalidAlert(context);
-    }
-    else if(e.code == "ERROR_USER_NOT_FOUND"){
+    } else if (e.code == "ERROR_USER_NOT_FOUND") {
       emailNotFoundAlert(context);
     }
   }
@@ -87,20 +85,23 @@ firebaseResetPassword(BuildContext context, String email) async {
 // ----------------------------------------------------------------------------//
 firebaseSignup(context, String email, String password) async {
   try {
-    final newUser = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    final newUser = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
     if (newUser != null) {
-      Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-        return new LoginScreen();
-      },),);
+      Navigator.of(context).push(
+        MaterialPageRoute<Null>(
+          builder: (BuildContext context) {
+            return new LoginScreen();
+          },
+        ),
+      );
     }
-  } catch(e){
-    if(e.code == "ERROR_INVALID_EMAIL"){
+  } catch (e) {
+    if (e.code == "ERROR_INVALID_EMAIL") {
       emailInvalidAlert(context);
-    }
-    else if(e.code == "ERROR_WEAK_PASSWORD"){
+    } else if (e.code == "ERROR_WEAK_PASSWORD") {
       badPasswordAlert(context);
-    }
-    else if(e.code == "ERROR_EMAIL_ALREADY_IN_USE"){
+    } else if (e.code == "ERROR_EMAIL_ALREADY_IN_USE") {
       emailInUseAlert(context);
     }
     print(e);

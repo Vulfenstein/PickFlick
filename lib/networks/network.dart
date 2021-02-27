@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
-import 'package:pick_flick/networks/api_errors.dart';
+import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_errors.dart';
 import 'package:pick_flick/utilities/constants.dart';
 
 class Network{
@@ -14,7 +14,6 @@ class Network{
       final response = await http.get(BASE_URL + url);
       responseJson = _returnResponse(response);
     } on SocketException{
-      print('No net');
       throw FetchDataException('No Internet Connection');
     }
     print('api get successful');
@@ -25,7 +24,6 @@ class Network{
     switch(response.statusCode){
       case 200:
         var responseJson = json.decode(response.body.toString());
-        print(responseJson);
         return responseJson;
       case 400:
         throw BadRequestException(response.body.toString());
