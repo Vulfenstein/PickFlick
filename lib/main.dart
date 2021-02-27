@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pick_flick/screens/movie_screen.dart';
 import 'package:pick_flick/screens/password_screen.dart';
 import 'package:pick_flick/screens/swipe_screen.dart';
 import 'package:pick_flick/screens/login_screen.dart';
@@ -32,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: new LoginScreen(),
+      home: new MovieScreen(),
     );
   }
 }

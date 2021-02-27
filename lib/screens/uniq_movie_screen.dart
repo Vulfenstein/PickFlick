@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:pick_flick/utilities/utilities_export.dart';
+import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:http/http.dart' as http;

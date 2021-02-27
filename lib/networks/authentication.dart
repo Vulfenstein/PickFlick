@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pick_flick/screens/login_screen.dart';
-import 'package:pick_flick/utilities/errors.dart';
+import 'package:pick_flick/utilities/login_errors.dart';
 
 // ----------------------------------------------------------------------------//
 //  Variables

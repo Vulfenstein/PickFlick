@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pick_flick/screens/login_screen.dart';
-import 'package:pick_flick/services/authentication.dart';
+import 'package:pick_flick/networks/authentication.dart';
 import 'package:pick_flick/utilities/widgets.dart';
 
 class PasswordScreen extends StatefulWidget {

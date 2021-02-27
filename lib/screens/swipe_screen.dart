@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:pick_flick/utilities/utilities_export.dart';
+import 'package:pick_flick/utilities/constants.dart';
+import  'package:pick_flick/utilities/widgets.dart';
 import 'package:pick_flick/screens/uniq_movie_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,9 +14,14 @@ class SwipeScreen extends StatefulWidget {
   }
 }
 
+
+//GET MORE CARDS
+//&page=NUMBER
+
 class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin {
   var movies;
   var index;
+  int count;
   List<int> selectionIds = [];
 
   Future getData() async {
@@ -83,6 +89,9 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
               //Get orientation and index of swiped card
               swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
                   var currentIndex = index;
+                  if(currentIndex <= index -1){
+                    getData();
+                  }
                   print("$currentIndex ${orientation.toString()}");
                   if(orientation == CardSwipeOrientation.RIGHT){
                     trackSelections(movies[index]['id']);

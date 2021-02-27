@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/screens/screens_export.dart';
-import 'package:pick_flick/services/services_export.dart';
-import 'package:pick_flick/utilities/utilities_export.dart';
-
+import 'package:pick_flick/utilities/screen_export.dart';
+import 'package:pick_flick/utilities/widgets.dart';
+import 'package:pick_flick/networks/authentication.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
