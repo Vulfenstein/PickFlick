@@ -8,25 +8,26 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 // ----------------------------------------------------------------------------//
 //  Build background color gradient
 // ----------------------------------------------------------------------------//
-backgroundBuilder() {
-  return Container(
-    height: double.infinity,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          //lightblue
-          Color(BACKGROUND_COLOR_1),
-          Color(BACKGROUND_COLOR_2),
-          Color(BACKGROUND_COLOR_3),
-        ],
+class BackgroundBuilder extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            //lightblue
+            Color(BACKGROUND_COLOR_1),
+            Color(BACKGROUND_COLOR_2),
+            Color(BACKGROUND_COLOR_3),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-
 // ----------------------------------------------------------------------------//
 //  Login/Signup message at top of screen
 // ----------------------------------------------------------------------------//

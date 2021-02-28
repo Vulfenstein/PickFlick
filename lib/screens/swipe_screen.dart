@@ -35,7 +35,7 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
         ),
         body: Stack(
             children: <Widget>[
-              backgroundBuilder(),
+              BackgroundBuilder(),
               StreamBuilder<ApiResponse<List<Movie>>>(
                 stream: _bloc.movieListStream,
                 builder: (context, snapshot) {
@@ -64,35 +64,6 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
   }
 }
 
-class Error extends StatelessWidget {
-  final String errorMessage;
-  final Function onRetryPressed;
-
-  const Error({Key key, this.errorMessage, this.onRetryPressed}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context){
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(errorMessage, textAlign: TextAlign.center, style: TextStyle(color: Colors.red, fontSize: 24),),
-          SizedBox(height: 10,),
-          RaisedButton(onPressed: onRetryPressed, color: Colors.blue,),
-        ],
-      ),
-    );
-  }
-}
-
-class Loading extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-}
 // ----------------------------------------------------------------------------//
 //  Constructs cards for swiping
 // ----------------------------------------------------------------------------//

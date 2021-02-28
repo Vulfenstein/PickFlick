@@ -146,7 +146,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          backgroundBuilder(),
+          BackgroundBuilder(),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(

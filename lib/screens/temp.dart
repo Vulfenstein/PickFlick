@@ -7,7 +7,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:pick_flick/bloc/individual_movie_bloc.dart';
 import  'package:pick_flick/utilities/widgets.dart';
 import 'package:pick_flick/utilities/api_response_status.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -43,21 +42,6 @@ class _MovieScreenState extends State<MovieeScreen> {
     super.dispose();
   }
 
-  // ----------------------------------------------------------------------------//
-//  Background color gradient
-// ----------------------------------------------------------------------------//
-  _backgroundBuilder() {
-    return BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(BACKGROUND_COLOR_1),
-            Color(BACKGROUND_COLOR_2),
-            Color(BACKGROUND_COLOR_3),
-          ],
-        ));
-  }
 
 // ----------------------------------------------------------------------------//
 //  Build Context
@@ -71,9 +55,8 @@ class _MovieScreenState extends State<MovieeScreen> {
         ),
         body: Stack(
             children: <Widget>[
-              backgroundBuilder(),
+              BackgroundBuilder(),
               Container(
-                decoration: _backgroundBuilder(),
                 child: SafeArea(
                   child: Container(
                     width: double.infinity,
@@ -137,6 +120,7 @@ class MovieInformation extends StatelessWidget{
   }
 }
 
+// ignore: must_be_immutable
 class VideoPlayer extends StatelessWidget {
 
   final MovieTrailerBloc bloc;
@@ -146,7 +130,6 @@ class VideoPlayer extends StatelessWidget {
   VideoPlayer({Key key, this.bloc, this.movie}) : super(key: key);
 
   Widget build(BuildContext context){
-
     return StreamBuilder<ApiResponse<MovieTrailer>> (
       stream: bloc.movieTrailerStream,
       builder: (context, snapshot) {

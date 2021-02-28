@@ -285,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          backgroundBuilder(),
+          BackgroundBuilder(),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(
