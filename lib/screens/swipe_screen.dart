@@ -3,9 +3,9 @@ import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import  'package:pick_flick/utilities/widgets.dart';
 import 'package:pick_flick/screens/uniq_movie_screen.dart';
-import 'package:pick_flick/models/movie_list_model.dart';
+import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/bloc/movie_bloc.dart';
-import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_response_status.dart';
+import 'package:pick_flick/utilities/api_response_status.dart';
 
 
 class SwipeScreen extends StatefulWidget {

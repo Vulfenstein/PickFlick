@@ -1,5 +1,5 @@
-import 'file:///C:/Users/vulfe/AndroidStudioProjects/pick_flick/lib/utilities/api_response_status.dart';
-import 'package:pick_flick/models/movie_list_model.dart';
+import 'package:pick_flick/utilities/api_response_status.dart';
+import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/repository/movie_repository.dart';
 import 'dart:async';
 

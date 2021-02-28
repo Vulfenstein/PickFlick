@@ -313,5 +313,6 @@ _videoPlayer(){
         } else {
           return Center(child: CircularProgressIndicator());
         }
-      });
+      },
+  );
 }
