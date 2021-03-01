@@ -1,7 +1,6 @@
 import 'package:pick_flick/models/movie_trailer.dart';
 import 'package:pick_flick/networks/network.dart';
 import 'package:pick_flick/models/movie_list.dart';
-import 'package:pick_flick/models/movie_trailer.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:pick_flick/models/movie_detail.dart';
 

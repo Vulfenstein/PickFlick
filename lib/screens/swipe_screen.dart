@@ -45,7 +45,6 @@ class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin 
                         return Loading();
                       case Status.COMPLETED:
                         return CardBuilder(movies: snapshot.data.data);
-                    //return cardBuilder(movieList: snapshot.data.data);
                       case Status.ERROR:
                         return Error(
                           errorMessage: snapshot.data.message,

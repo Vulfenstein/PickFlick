@@ -31,8 +31,6 @@ class MovieTrailerBloc {
     }
   }
 
-
-
   dispose() {
     _movieController?.close();
   }
