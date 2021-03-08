@@ -10,7 +10,7 @@ const String DISCOVER_URL = 'http://api.themoviedb.org/3/discover/movie?api_key=
 
 const String MOVIE_URL = 'https://api.themoviedb.org/3/movie/';
 
-const String BASE_URL = 'http://api.themoviedb.org/3/';
+const String BASE_URL = 'https://api.themoviedb.org/3/';
 
 const String API_ATTACHMENT = '?api_key=';
 

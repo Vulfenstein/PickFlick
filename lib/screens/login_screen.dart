@@ -140,8 +140,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          firebaseLogin(context, email, password);
-          if(await FirebaseAuth.instance.currentUser() != null){
+          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+          if(userCredential != null){
               Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
               return new SwipeScreen();
             },),);
@@ -174,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
         splashColor: Colors.white,
         onPressed: () async{
           signInWithGoogle();
-          if(await FirebaseAuth.instance.currentUser() != null){
+          if(FirebaseAuth.instance.currentUser != null){
             Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
               return new SwipeScreen();
             },),);

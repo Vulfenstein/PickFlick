@@ -45,9 +45,11 @@ class _MovieScreenState extends State<MovieScreen> {
   // ignore: missing_return
   Future<Map> getJson() async {
     try {
+
       var url =
           MOVIE_URL + widget.movieId.toString() + API_ATTACHMENT + API_KEY;
-      var response = await http.get(url);
+      Uri uri = Uri.parse(url);
+      var response = await http.get(uri);
       return json.decode(response.body);
     } catch (e) {
       print(e);
@@ -73,7 +75,8 @@ class _MovieScreenState extends State<MovieScreen> {
           API_ATTACHMENT +
           API_KEY +
           "&language=en-US";
-      var response = await http.get(url);
+      Uri uri = Uri.parse(url);
+      var response = await http.get(uri);
       return json.decode(response.body);
     } catch (e) {
       print(e);

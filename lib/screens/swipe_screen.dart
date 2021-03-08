@@ -6,7 +6,8 @@ import 'package:pick_flick/screens/uniq_movie_screen.dart';
 import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/bloc/movie_bloc.dart';
 import 'package:pick_flick/utilities/api_response_status.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SwipeScreen extends StatefulWidget {
 
@@ -20,6 +21,7 @@ class SwipeScreen extends StatefulWidget {
 class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin {
 
   MovieBloc _bloc;
+  List<int> matchedMovies;
 
   void initState() {
     super.initState();
@@ -114,6 +116,7 @@ class CardBuilder extends StatelessWidget {
                 var currentIndex = index;
                 print("$currentIndex ${orientation.toString()}");
                 if (orientation == CardSwipeOrientation.RIGHT) {
+                  addMovies(movies[index]);
                   print('hello');
                 }
               },
@@ -125,7 +128,16 @@ class CardBuilder extends StatelessWidget {
   }
 }
 
-
+void addMovies(Movie movie)
+{
+  final firestoreInstance = FirebaseFirestore.instance;
+  var firebaseUser =  FirebaseAuth.instance.currentUser;
+    firestoreInstance.collection("users").doc(firebaseUser.uid).set({
+      "ids": FieldValue.arrayUnion([movie.id]),
+    },SetOptions(merge: true)).then((_) {
+      print("added");
+    });
+}
 
 
 

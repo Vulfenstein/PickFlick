@@ -8,10 +8,11 @@ import 'package:pick_flick/utilities/constants.dart';
 class Network{
 
   Future<dynamic> get(String url) async {
-    print('Api Get, url $url');
+    print('Api Get, url $BASE_URL$url');
     var responseJson;
     try{
-      final response = await http.get(BASE_URL + url);
+      Uri uri = Uri.parse(BASE_URL+url);
+      final response = await http.get(uri);
       responseJson = _returnResponse(response);
     } on SocketException{
       throw FetchDataException('No Internet Connection');
