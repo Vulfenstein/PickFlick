@@ -7,7 +7,7 @@ class MovieTrailer {
   MovieTrailer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     if (json['results'] != null) {
-      results = new List<Results>();
+      results = new List<Results>.empty(growable: true);
       json['results'].forEach((v) {
         results.add(new Results.fromJson(v));
       });

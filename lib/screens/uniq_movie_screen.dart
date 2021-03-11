@@ -27,9 +27,8 @@ class _MovieScreenState extends State<MovieScreen> {
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
+    // disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -164,7 +163,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Builds runtime row
+//  Builds movie runtime row
 // ----------------------------------------------------------------------------//
   _runtimeBuilder() {
     return Padding(
@@ -213,7 +212,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Play youtube videos
+//  Trailer widget
 // ----------------------------------------------------------------------------//
 _videoPlayer(){
   return FutureBuilder(
@@ -271,7 +270,6 @@ _videoPlayer(){
                       ),
                     ),
                     backgroundColor: Colors.transparent,
-                    //elevation: 0.0,
                   ),
                 ),
                 Container(
@@ -285,25 +283,15 @@ _videoPlayer(){
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           _videoPlayer(),
-                          SizedBox(
-                            height: 20.0,
-                          ),
+                          SizedBox(height: 20.0),
                           _titleBuilder(),
-                          SizedBox(
-                            height: 7.0,
-                          ),
+                          SizedBox(height: 7.0),
                           _ratingBuilder(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
+                          SizedBox(height: 10.0),
                           _runtimeBuilder(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
+                          SizedBox(height: 10.0),
                           _releaseDateBuilder(),
-                          SizedBox(
-                            height: 15.0,
-                          ),
+                          SizedBox(height: 15.0),
                           _overviewBuilder(),
                         ],
                       ),

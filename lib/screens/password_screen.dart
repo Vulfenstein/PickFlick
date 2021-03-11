@@ -19,7 +19,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   String e;
 
 // ----------------------------------------------------------------------------//
-//  Sign up message at top of screen
+//  Forgot password text
 // ----------------------------------------------------------------------------//
   _passwordTextBuilder() {
     return Text(
@@ -34,7 +34,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  'email' + email text box
+//  Email submission field
 // ----------------------------------------------------------------------------//
   _emailBuilder() {
     return Column(
@@ -77,7 +77,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  'email' + email text box
+//  Submit button
 // ----------------------------------------------------------------------------//
   _enterButtonBuilder() {
     return Container(
@@ -107,7 +107,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  'email' + email text box
+//  Return button
 // ----------------------------------------------------------------------------//
   _returnButtonBuilder() {
     return Container(

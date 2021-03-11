@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var movieData;
 
 // ----------------------------------------------------------------------------//
-//  'email' + email text box
+//  Email text field
 // ----------------------------------------------------------------------------//
   _emailBuilder() {
     return Column(
@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  'password' + password box
+//  password text field
 // ----------------------------------------------------------------------------//
   //Constructs password box
   _passwordBuilder() {
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  'forgot password text + link'
+//  forgot password text & link
 // ----------------------------------------------------------------------------//
   _forgotPasswordBuilder() {
     return Container(
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
           UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
           if(userCredential != null){
               Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-              return new SwipeScreen();
+              return new Home();
             },),);
           }
         },
@@ -176,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
           signInWithGoogle();
           if(FirebaseAuth.instance.currentUser != null){
             Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-              return new SwipeScreen();
+              return new Home();
             },),);
           }
         },

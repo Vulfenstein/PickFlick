@@ -1,4 +1,4 @@
-import 'package:pick_flick/utilities/api_response_status.dart';
+import 'package:pick_flick/utilities/api_helper_functions.dart';
 import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/repository/movie_repository.dart';
 import 'dart:async';
@@ -26,6 +26,7 @@ class MovieBloc {
       List<Movie> movies = await _movieRepository.fetchMovieList();
       movieListSink.add(ApiResponse.completed(movies));
     } catch (e) {
+      print("hello");
       movieListSink.add(ApiResponse.error(e.toString()));
       print(e);
     }

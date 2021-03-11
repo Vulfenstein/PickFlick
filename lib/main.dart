@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pick_flick/utilities/screen_export.dart';
-import 'package:pick_flick/screens/temp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pick_flick/utilities/widgets.dart';
 
@@ -23,13 +22,16 @@ class App extends StatelessWidget {
         if (snapshot.hasError) {
           return Loading();
         }
-
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          Widget test = new MediaQuery(data: MediaQueryData(), child: new MaterialApp(home: new LoginScreen()));
-          return test;
+          Widget success = new MediaQuery(
+              data: MediaQueryData(),
+              child: new MaterialApp(
+                home: new LoginScreen(),
+                debugShowCheckedModeBanner: false,
+              ));
+          return success;
         }
-
         // Otherwise, show something whilst waiting for initialization to complete
         return Loading();
       },

@@ -1,4 +1,4 @@
-import 'package:pick_flick/utilities/api_response_status.dart';
+import 'package:pick_flick/utilities/api_helper_functions.dart';
 import 'package:pick_flick/models/movie_detail.dart';
 import 'package:pick_flick/repository/movie_repository.dart';
 import 'dart:async';
@@ -17,10 +17,10 @@ class IndividualMovieBloc {
   IndividualMovieBloc(int id) {
     _movieController = StreamController<ApiResponse<MovieDetail>>();
     _movieRepository = MovieRepository();
-    fetchMovie(id);
+    fetchMovieInformation(id);
   }
 
-  fetchMovie(int id) async {
+  fetchMovieInformation(int id) async {
     movieSink.add(ApiResponse.loading('Fetching Movie Details'));
     try {
       MovieDetail movie = await _movieRepository.fetchMovieDetails(id);

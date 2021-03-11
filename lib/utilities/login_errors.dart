@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pick_flick/screens/password_screen.dart';
 
 // ----------------------------------------------------------------------------//
-//  Alert message if email is not found in firebase
+//  email is not found in firebase
 // ----------------------------------------------------------------------------//
 emailNotFoundAlert(BuildContext context) {
   // set up the button
@@ -32,7 +32,7 @@ emailNotFoundAlert(BuildContext context) {
 }
 
 // ----------------------------------------------------------------------------//
-//  Alert message if password is incorrect
+//  password is incorrect
 // ----------------------------------------------------------------------------//
 incorrectPasswordAlert(BuildContext context) {
   // set up the button
@@ -71,7 +71,7 @@ incorrectPasswordAlert(BuildContext context) {
 }
 
 // ----------------------------------------------------------------------------//
-//  Alert message if password becomes locked
+//  password becomes locked
 // ----------------------------------------------------------------------------//
 passwordLockAlert(BuildContext context){
   // set up the button
@@ -101,7 +101,7 @@ passwordLockAlert(BuildContext context){
 }
 
 // ----------------------------------------------------------------------------//
-//  Invalid email alert box
+//  invalid email alert box
 // ----------------------------------------------------------------------------//
 emailInvalidAlert(BuildContext context) {
   // set up the button
@@ -131,7 +131,7 @@ emailInvalidAlert(BuildContext context) {
 }
 
 // ----------------------------------------------------------------------------//
-//  Invalid email alert box
+//  Email sent for forgotten password
 // ----------------------------------------------------------------------------//
 confirmationAlert(BuildContext context) {
   // set up the button

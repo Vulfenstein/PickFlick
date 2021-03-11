@@ -11,7 +11,7 @@ class MovieResponse {
     totalResults = json['total_results'];
     totalPages = json['total_pages'];
     if (json['results'] != null) {
-      results = new List<Movie>();
+      results = new List<Movie>.empty(growable: true);
       json['results'].forEach((v) {
         results.add(new Movie.fromJson(v));
       });

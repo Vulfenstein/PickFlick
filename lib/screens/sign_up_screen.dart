@@ -103,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  'email' + email text box
+//  sign up button
 // ----------------------------------------------------------------------------//
   _signUpButtonBuilder() {
     return Container(
@@ -133,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  'email' + email text box
+//  return to login button
 // ----------------------------------------------------------------------------//
   _returnButtonBuilder() {
     return Container(

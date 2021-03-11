@@ -1,143 +1,55 @@
+// Swipe stack
 import 'package:flutter/material.dart';
-import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:pick_flick/utilities/constants.dart';
-import  'package:pick_flick/utilities/widgets.dart';
-import 'package:pick_flick/screens/uniq_movie_screen.dart';
-import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/bloc/movie_bloc.dart';
-import 'package:pick_flick/utilities/api_response_status.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pick_flick/models/movie_list.dart';
+import 'package:pick_flick/utilities/api_helper_functions.dart';
+import 'package:pick_flick/utilities/widgets.dart';
 
-class SwipeScreen extends StatefulWidget {
-
+class MovieSwipe extends StatefulWidget {
   @override
-  SwipeScreenState createState() {
-    return new SwipeScreenState();
-  }
+  _MovieSwipeState createState() => _MovieSwipeState();
 }
 
-
-class SwipeScreenState extends State<SwipeScreen> with TickerProviderStateMixin {
-
+class _MovieSwipeState extends State<MovieSwipe> {
   MovieBloc _bloc;
-  List<int> matchedMovies;
 
   void initState() {
-    super.initState();
     _bloc = MovieBloc();
+    super.initState();
+  }
+
+  void dispose(){
+    _bloc.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          title: Text('Pick Flick',),
-        ),
-        body: Stack(
-            children: <Widget>[
-              BackgroundBuilder(),
-              StreamBuilder<ApiResponse<List<Movie>>>(
-                stream: _bloc.movieListStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    switch (snapshot.data.status) {
-                      case Status.LOADING:
-                        return Loading();
-                      case Status.COMPLETED:
-                        return CardBuilder(movies: snapshot.data.data);
-                      case Status.ERROR:
-                        return Error(
-                          errorMessage: snapshot.data.message,
-                          onRetryPressed: () => _bloc.fetchMovieList(),
-                        );
-                        break;
-                    }
-                  }
-                  return Container();
-                },
-              )
-            ]
-        )
-
-    );
-  }
-}
-
-// ----------------------------------------------------------------------------//
-//  Constructs cards for swiping
-// ----------------------------------------------------------------------------//
-
-class CardBuilder extends StatelessWidget {
-  final List<Movie> movies;
-
-  const CardBuilder({Key key, this.movies}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: new TinderSwapCard(
-              totalNum: movies != null ? movies.length : 0,
-              stackNum: 3,
-              orientation: AmassOrientation.TOP,
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-              maxHeight: MediaQuery.of(context).size.width * 2,
-              minWidth: MediaQuery.of(context).size.width * 0.8,
-              minHeight: MediaQuery.of(context).size.width * 0.8,
-
-              // Construct new cards
-              cardBuilder: (context, index) =>
-                  FlatButton(
-                    child: Card(
-                      elevation: 100.0,
-                      child: Padding(
-                        padding: EdgeInsets.all(1.5),
-                        child: Image.network(
-                          IMAGEURL + movies[index].posterPath,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    onPressed: () =>
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
-                          builder: (BuildContext context) {
-                            return new MovieScreen(movies[index].id);
-                          },),),
-                  ),
-
-              //Get orientation and index of swiped card
-              swipeCompleteCallback: (CardSwipeOrientation orientation,
-                  int index) {
-                var currentIndex = index;
-                print("$currentIndex ${orientation.toString()}");
-                if (orientation == CardSwipeOrientation.RIGHT) {
-                  addMovies(movies[index]);
-                  print('hello');
+    return Stack(
+        children: <Widget>[
+          BackgroundBuilder(),
+          StreamBuilder<ApiResponse<List<Movie>>>(
+            stream: _bloc.movieListStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    return Loading();
+                  case Status.COMPLETED:
+                    return CardBuilder(movies: snapshot.data.data);
+                  case Status.ERROR:
+                    print(snapshot.data.message);
+                    return Error(
+                      errorMessage: snapshot.data.message,
+                      onRetryPressed: () => _bloc.fetchMovieList(),
+                    );
+                    break;
                 }
-              },
-            ),
+              }
+              return Container();
+            },
           ),
-        ),
-      ],
+        ]
     );
   }
 }
-
-void addMovies(Movie movie)
-{
-  final firestoreInstance = FirebaseFirestore.instance;
-  var firebaseUser =  FirebaseAuth.instance.currentUser;
-    firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-      "ids": FieldValue.arrayUnion([movie.id]),
-    },SetOptions(merge: true)).then((_) {
-      print("added");
-    });
-}
-
-
-

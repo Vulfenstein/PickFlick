@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
-import 'package:pick_flick/utilities/api_errors.dart';
+import 'package:pick_flick/utilities/api_helper_functions.dart';
 import 'package:pick_flick/utilities/constants.dart';
 
 class Network{

@@ -31,3 +31,23 @@ class InvalidInputException extends AppException {
   InvalidInputException([String message])
       : super(message, "Invalid Input: ");
 }
+
+// ----------------------------------------------------------------------------//
+//  Api response messages
+// ----------------------------------------------------------------------------//
+class ApiResponse<T> {
+  Status status;
+  T data;
+  String message;
+
+  ApiResponse.loading(this.message) : status = Status.LOADING;
+  ApiResponse.completed(this.data) : status = Status.COMPLETED;
+  ApiResponse.error(this.message) : status = Status.ERROR;
+
+  @override
+  String toString() {
+    return "Status : $status \n Message : $message \n Data : $data";
+  }
+}
+
+enum Status { LOADING, COMPLETED, ERROR }

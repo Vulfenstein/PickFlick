@@ -6,7 +6,7 @@ import 'package:pick_flick/utilities/constants.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:pick_flick/bloc/individual_movie_bloc.dart';
 import  'package:pick_flick/utilities/widgets.dart';
-import 'package:pick_flick/utilities/api_response_status.dart';
+import 'package:pick_flick/utilities/api_helper_functions.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -74,7 +74,7 @@ class _MovieScreenState extends State<MovieeScreen> {
                             case Status.ERROR:
                               return Error(
                                 errorMessage: snapshot.data.message,
-                                onRetryPressed: () => _bloc.fetchMovie(widget.movieId),
+                                onRetryPressed: () => _bloc.fetchMovieInformation(widget.movieId),
                               );
                               break;
                           }
