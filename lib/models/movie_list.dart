@@ -36,7 +36,7 @@ class Movie {
   bool video;
   var voteAverage;
   String title;
-  double popularity;
+  var popularity;
   String posterPath;
   String originalLanguage;
   String originalTitle;

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_flick/screens/match_screen.dart';
 import 'package:pick_flick/screens/password_screen.dart';
@@ -15,7 +16,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with TickerProviderStateMixin {
 
   int _currentIndex = 0;
-  List <String> categories = ["Action", "Comedy","Drama", "Fantasy", "Horror", "Mystery", "Romance", "Thriller"];
+  List <String> categories = ["Friends","Settings", "Log Out"];
 
   void changeScreen(int index) {
     setState(() {
@@ -31,19 +32,23 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           centerTitle: true,
           automaticallyImplyLeading: false,
           elevation: 0.0,
-          leading: DropdownButton(),
           backgroundColor: Color(0xFF14575d),
-          title: Text('Pick Flick',),
+          title: Text("Pick Flick"),
+          leading: IconButton(icon: Icon(Icons.search), onPressed:(){},),
           actions: <Widget>[
-            DropdownButton(
-              items: categories.map((String value) {
-              return new DropdownMenuItem<String>(
-                  value: value,
-                  child: new Text(value),);
-            }).toList(),
-              onChanged: (_){},
-              icon: new Icon(Icons.dehaze, color: Colors.white,),
-              dropdownColor: Color(0xFF36aaa8),),
+            Padding(padding: EdgeInsets.only(right: 10)),
+            DropdownButtonHideUnderline(
+              child: DropdownButton(
+                items: categories.map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: new Text(value),);
+                }).toList(),
+                onChanged: (_){},
+                icon: new Icon(Icons.dehaze, color: Colors.white,),
+                dropdownColor: Color(0xFF36aaa8),),
+            ),
+            Padding(padding: EdgeInsets.only(right: 15)),
           ],
         ),
 

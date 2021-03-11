@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pick_flick/bloc/movie_bloc.dart';
 import 'package:pick_flick/models/movie_list.dart';
-import 'package:pick_flick/utilities/api_helper_functions.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
-import 'package:pick_flick/utilities/screen_export.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_tindercard/flutter_tindercard.dart';
 
 // ----------------------------------------------------------------------------//
 //  Individual movie details functions
@@ -229,66 +225,6 @@ class Error extends StatelessWidget {
 //  Movie Swipe Screen functions
 // ----------------------------------------------------------------------------//
 
-//  Swipe card constructor
-class CardBuilder extends StatelessWidget {
-  final List<Movie> movies;
-
-  const CardBuilder({Key key, this.movies}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: new TinderSwapCard(
-              totalNum: movies != null ? movies.length : 0,
-              stackNum: 3,
-              orientation: AmassOrientation.TOP,
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-              maxHeight: MediaQuery.of(context).size.width * 2,
-              minWidth: MediaQuery.of(context).size.width * 0.8,
-              minHeight: MediaQuery.of(context).size.width * 0.8,
-
-              // Construct new cards
-              cardBuilder: (context, index) =>
-                  OutlinedButton(
-                    child: Card(
-                      elevation: 100.0,
-                      child: Padding(
-                        padding: EdgeInsets.all(1.5),
-                        child: Image.network(
-                          IMAGEURL + movies[index].posterPath,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    onPressed: () =>
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
-                          builder: (BuildContext context) {
-                            return new MovieScreen(movies[index].id);
-                          },),),
-                  ),
-
-              //Get orientation and index of swiped card
-              swipeCompleteCallback: (CardSwipeOrientation orientation,
-                  int index) {
-                var currentIndex = index;
-                print("$currentIndex ${orientation.toString()}");
-                if (orientation == CardSwipeOrientation.RIGHT) {
-                  addMovies(movies[index]);
-                  print('hello');
-                }
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 //  Add liked movie id to database
 void addMovies(Movie movie) {
   final firestoreInstance = FirebaseFirestore.instance;
@@ -298,4 +234,29 @@ void addMovies(Movie movie) {
   },SetOptions(merge: true)).then((_) {
     print("added");
   });
+}
+
+int getVal(String genre){
+  switch(genre){
+    case 'Popular':
+      return 0;
+    case 'Action':
+      return 28;
+    case 'Comedy':
+      return 35;
+    case 'Drama':
+      return 18;
+    case 'Fantasy':
+      return 14;
+    case 'Horror':
+      return 27;
+    case 'Mystery':
+      return 9648;
+    case 'Romance':
+      return 10749;
+    case 'Thriller':
+      return 53;
+    default:
+      return 0;
+  }
 }

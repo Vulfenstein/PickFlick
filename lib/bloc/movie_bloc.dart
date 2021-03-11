@@ -4,6 +4,9 @@ import 'package:pick_flick/repository/movie_repository.dart';
 import 'dart:async';
 
 class MovieBloc {
+
+  int curGenre;
+
   MovieRepository _movieRepository;
 
   StreamController _movieListController;
@@ -26,7 +29,40 @@ class MovieBloc {
       List<Movie> movies = await _movieRepository.fetchMovieList();
       movieListSink.add(ApiResponse.completed(movies));
     } catch (e) {
-      print("hello");
+      movieListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  fetchNextPage() async {
+    movieListSink.add(ApiResponse.loading('Fetching more Movies'));
+    try {
+      List<Movie> movies = await _movieRepository.fetchNextPage();
+      movieListSink.add(ApiResponse.completed(movies));
+    } catch (e) {
+      movieListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  fetchGenreList(int genreID) async {
+    curGenre = genreID;
+    movieListSink.add(ApiResponse.loading('Fetching Movies'));
+    try {
+      List<Movie> movies = await _movieRepository.fetchGenreList(curGenre);
+      movieListSink.add(ApiResponse.completed(movies));
+    } catch (e) {
+      movieListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  fetchGenreNextPage() async {
+    movieListSink.add(ApiResponse.loading('Fetching more Movies'));
+    try {
+      List<Movie> movies = await _movieRepository.fetchGenreNextPage(curGenre);
+      movieListSink.add(ApiResponse.completed(movies));
+    } catch (e) {
       movieListSink.add(ApiResponse.error(e.toString()));
       print(e);
     }
