@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pick_flick/screens/match_screen.dart';
-import 'package:pick_flick/screens/password_screen.dart';
-import 'package:pick_flick/bloc/movie_bloc.dart';
-import 'package:pick_flick/screens/swipe_screen.dart';
+import 'package:pick_flick/utilities/helper_functions.dart';
+import 'package:pick_flick/utilities/screen_export.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Home extends StatefulWidget {
 
@@ -17,6 +16,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   int _currentIndex = 0;
   List <String> categories = ["Friends","Settings", "Log Out"];
+  String newVal;
+  Icon searchIcon = new Icon(Icons.search);
+  Widget pageTitle = new Text("Pick Flick");
 
   void changeScreen(int index) {
     setState(() {
@@ -33,8 +35,26 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           automaticallyImplyLeading: false,
           elevation: 0.0,
           backgroundColor: Color(0xFF14575d),
-          title: Text("Pick Flick"),
-          leading: IconButton(icon: Icon(Icons.search), onPressed:(){},),
+          title: pageTitle,
+          leading: IconButton(icon: searchIcon, onPressed:(){
+            setState(() {
+              if(searchIcon.icon == Icons.search){
+                searchIcon = new Icon(Icons.close);
+                pageTitle = new TextField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: new InputDecoration(
+                    fillColor: Colors.white,
+                    hintText: 'Search for movie',
+                    hintStyle: TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+              else{
+                searchIcon = new Icon(Icons.search);
+                pageTitle = new Text("Pick Flick");
+              }
+            });
+          },),
           actions: <Widget>[
             Padding(padding: EdgeInsets.only(right: 10)),
             DropdownButtonHideUnderline(
@@ -44,7 +64,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     value: value,
                     child: new Text(value),);
                 }).toList(),
-                onChanged: (_){},
+                onChanged: (String input){
+                    topBarSelection(input);
+                },
                 icon: new Icon(Icons.dehaze, color: Colors.white,),
                 dropdownColor: Color(0xFF36aaa8),),
             ),
@@ -67,7 +89,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           children: <Widget>[
             MovieSwipe(),
             MatchScreen(),
-            PasswordScreen(),
+            ChatScreen(),
           ],
           index: _currentIndex,
         ),

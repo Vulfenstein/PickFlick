@@ -14,20 +14,6 @@ class _MatchScreenState extends State<MatchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: firestoreInstance.collection('users').doc(firebaseUser.uid).collection('Movie Details').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(snapshot.hasData == null){
-          return Loading();
-        }
-        return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemBuilder: (BuildContext context, int index) {
-              return Container(child: Text(snapshot.data, style: TextStyle(color: Colors.black),),);
-            },
-          itemCount: snapshot.data.docs.length,
-        );
-      },
-    );
+    return Container();
   }
 }

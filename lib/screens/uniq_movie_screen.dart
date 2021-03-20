@@ -293,6 +293,14 @@ _videoPlayer(){
                           _releaseDateBuilder(),
                           SizedBox(height: 15.0),
                           _overviewBuilder(),
+                          Row(
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.only(left: 130.0),),
+                              IconButton(icon: new Icon(Icons.thumb_up_alt, size: 40.0,), onPressed: (){},),
+                              Padding(padding: EdgeInsets.only(left: 30.0),),
+                              IconButton(icon: new Icon(Icons.thumb_down_alt, size: 40.0,), onPressed: (){},),
+                            ],
+                          ),
                         ],
                       ),
                     ),

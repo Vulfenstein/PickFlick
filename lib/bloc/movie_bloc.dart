@@ -1,4 +1,4 @@
-import 'package:pick_flick/utilities/api_helper_functions.dart';
+import 'package:pick_flick/utilities/helper_functions.dart';
 import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/repository/movie_repository.dart';
 import 'dart:async';

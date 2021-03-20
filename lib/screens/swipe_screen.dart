@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:pick_flick/bloc/movie_bloc.dart';
 import 'package:pick_flick/models/movie_list.dart';
-import 'package:pick_flick/utilities/api_helper_functions.dart';
+import 'package:pick_flick/utilities/helper_functions.dart';
 import 'package:pick_flick/utilities/widgets.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:pick_flick/utilities/screen_export.dart';

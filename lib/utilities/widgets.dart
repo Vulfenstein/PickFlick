@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pick_flick/models/movie_list.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pick_flick/utilities/helper_functions.dart';
 
 // ----------------------------------------------------------------------------//
 //  Individual movie details functions
@@ -172,13 +170,6 @@ class OverviewBuilder extends StatelessWidget {
   }
 }
 
-//  Convert total minutes to hours and minutes.
-String durationToString(int minutes) {
-  var d = Duration(minutes: minutes);
-  List<String> parts = d.toString().split(':');
-  return '${parts[0]}h ${parts[1].padLeft(2, '0')}m';
-}
-
 //  Returns loading circle
 class Loading extends StatelessWidget {
   @override
@@ -218,45 +209,5 @@ class Error extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-// ----------------------------------------------------------------------------//
-//  Movie Swipe Screen functions
-// ----------------------------------------------------------------------------//
-
-//  Add liked movie id to database
-void addMovies(Movie movie) {
-  final firestoreInstance = FirebaseFirestore.instance;
-  var firebaseUser =  FirebaseAuth.instance.currentUser;
-  firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-    "Movie Details": FieldValue.arrayUnion([movie.id, movie.posterPath],),
-  },SetOptions(merge: true)).then((_) {
-    print("added");
-  });
-}
-
-int getVal(String genre){
-  switch(genre){
-    case 'Popular':
-      return 0;
-    case 'Action':
-      return 28;
-    case 'Comedy':
-      return 35;
-    case 'Drama':
-      return 18;
-    case 'Fantasy':
-      return 14;
-    case 'Horror':
-      return 27;
-    case 'Mystery':
-      return 9648;
-    case 'Romance':
-      return 10749;
-    case 'Thriller':
-      return 53;
-    default:
-      return 0;
   }
 }
