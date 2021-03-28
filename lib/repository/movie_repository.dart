@@ -47,4 +47,5 @@ class MovieRepository {
     final response = await _helper.get("movie/${id.toString()}/videos?api_key=$API_KEY&language=en-US");
     return MovieTrailer.fromJson(response);
   }
+
 }

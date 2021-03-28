@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_flick/utilities/helper_functions.dart';
 import 'package:pick_flick/utilities/screen_export.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pick_flick/utilities/constants.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:pick_flick/utilities/error_messages.dart';
 
 class Home extends StatefulWidget {
 
@@ -14,11 +17,13 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
 
-  int _currentIndex = 0;
-  List <String> categories = ["Friends","Settings", "Log Out"];
+  var detail;
   String newVal;
+  int _currentIndex = 0;
+  TextEditingController _controller;
   Icon searchIcon = new Icon(Icons.search);
   Widget pageTitle = new Text("Pick Flick");
+  List <String> categories = ["Friends","Settings", "Log Out"];
 
   void changeScreen(int index) {
     setState(() {
@@ -27,9 +32,47 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose(){
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future getData(String title) async {
+    var data = await getJson(title);
+    detail = data;
+    return detail;
+  }
+
+  // ignore: missing_return
+  Future<Map> getJson(String title) async {
+    try {
+      var url =
+          MOVIE_SEARCH + API_KEY + '&query=' + title;
+      Uri uri = Uri.parse(url);
+      var response = await http.get(uri);
+      return json.decode(response.body);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void searchHandle(String value) async{
+    String result = value.replaceAll(' ', '+');
+    final movie = await getData(result);
+    if(movie['results'].isNotEmpty){
+      Navigator.of(context).push(MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return new MovieScreen(movie['results'][0]['id']);
+        },),);
+    }
+    else{
+      movieNotFound(context);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -41,6 +84,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               if(searchIcon.icon == Icons.search){
                 searchIcon = new Icon(Icons.close);
                 pageTitle = new TextField(
+                  controller: _controller,
+                  onSubmitted: (String value) async {
+                    searchHandle(value);
+                  },
                   style: TextStyle(color: Colors.white),
                   decoration: new InputDecoration(
                     fillColor: Colors.white,

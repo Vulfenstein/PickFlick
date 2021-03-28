@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pick_flick/models/movie_list.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_flick/screens/login_screen.dart';
-import 'package:pick_flick/screens/login_screen.dart';
 
 // ----------------------------------------------------------------------------//
 //  Api error messages
@@ -70,6 +69,17 @@ void addMovies(Movie movie) {
   });
 }
 
+//  Add movie from unique page
+void uniqMovieAdd(int id, String posterPath) {
+  final firestoreInstance = FirebaseFirestore.instance;
+  var firebaseUser =  FirebaseAuth.instance.currentUser;
+  firestoreInstance.collection("users").doc(firebaseUser.uid).set({
+    "Movie Details": FieldValue.arrayUnion([id, posterPath],),
+  },SetOptions(merge: true)).then((_) {
+    print("added");
+  });
+}
+
 // convert movie genre string to integer
 int getVal(String genre){
   switch(genre){
@@ -103,7 +113,7 @@ String durationToString(int minutes) {
   return '${parts[0]}h ${parts[1].padLeft(2, '0')}m';
 }
 
-// Top bar navigation handler
+// Home screen top bar navigation handler
 void topBarSelection(String selection) async{
   if(selection == 'Friends'){
     print("friends pressed");

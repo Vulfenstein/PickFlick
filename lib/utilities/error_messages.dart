@@ -229,3 +229,33 @@ emailInUseAlert(BuildContext context) {
     },
   );
 }
+
+// ----------------------------------------------------------------------------//
+// movie searched for not found
+// ----------------------------------------------------------------------------//
+movieNotFound(BuildContext context) {
+  // set up the button
+  Widget okButton = FlatButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("No Results Found!"),
+    content: Text("Double check spelling."),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

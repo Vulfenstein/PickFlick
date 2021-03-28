@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
+import 'package:pick_flick/utilities/helper_functions.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -33,7 +34,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Get detailed movie data
+//  Fetch detailed movie information
 // ----------------------------------------------------------------------------//
   Future getData() async {
     var data = await getJson();
@@ -44,7 +45,6 @@ class _MovieScreenState extends State<MovieScreen> {
   // ignore: missing_return
   Future<Map> getJson() async {
     try {
-
       var url =
           MOVIE_URL + widget.movieId.toString() + API_ATTACHMENT + API_KEY;
       Uri uri = Uri.parse(url);
@@ -56,7 +56,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
   // ----------------------------------------------------------------------------//
-//  Get detailed movie data
+//  Fetch movie trailer information
 // ----------------------------------------------------------------------------//
   Future getTrailerData() async {
     var data = await getTrailerJson();
@@ -99,7 +99,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Build title text
+//  Movie title
 // ----------------------------------------------------------------------------//
   _titleBuilder() {
     return Padding(
@@ -112,7 +112,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Builds rating row
+//  Row for stars and number of ratings
 // ----------------------------------------------------------------------------//
   _ratingBuilder() {
     return Row(
@@ -138,7 +138,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Builds release date row
+//  Row for release date information
 // ----------------------------------------------------------------------------//
   _releaseDateBuilder() {
     return Padding(
@@ -163,7 +163,7 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
 // ----------------------------------------------------------------------------//
-//  Builds movie runtime row
+//  Row for movies runtime information
 // ----------------------------------------------------------------------------//
   _runtimeBuilder() {
     return Padding(
@@ -195,20 +195,30 @@ class _MovieScreenState extends State<MovieScreen> {
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Text(
         detail['overview'],
-        maxLines: 6,
+        maxLines: 5,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.black, fontSize: 16.0),
       ),
     );
   }
 
+  // ----------------------------------------------------------------------------//
+//  Like and dislike buttons
 // ----------------------------------------------------------------------------//
-//  Convert total minutes to hours and minutes.
-// ----------------------------------------------------------------------------//
-  String durationToString(int minutes) {
-    var d = Duration(minutes: minutes);
-    List<String> parts = d.toString().split(':');
-    return '${parts[0]}h ${parts[1].padLeft(2, '0')}m';
+  _likeDislikeBuilder(){
+    return Row(
+      children: <Widget>[
+        Padding(padding: EdgeInsets.only(left: 130.0),),
+        IconButton(icon: new Icon(Icons.thumb_down_alt, size: 40.0,), onPressed: (){
+          Navigator.pop(context, detail['id']);
+        },),
+        Padding(padding: EdgeInsets.only(left: 30.0),),
+        IconButton(icon: new Icon(Icons.thumb_up_alt, size: 40.0,), onPressed: (){
+          uniqMovieAdd(detail['id'], detail['poster_path']);
+          Navigator.pop(context, detail['id']);
+        },),
+      ],
+    );
   }
 
 // ----------------------------------------------------------------------------//
@@ -232,9 +242,7 @@ _videoPlayer(){
             controller: _controller,
             showVideoProgressIndicator: true,
             progressIndicatorColor: Colors.amber,
-            onReady: (){
-              print("player ready");
-            },
+            onReady: (){},
           ),
         );
       } else {
@@ -260,18 +268,6 @@ _videoPlayer(){
           return Scaffold(
             body: Stack(
               children: <Widget>[
-                Scaffold(
-                  // backgroundColor: Colors.transparent,
-                  appBar: AppBar(
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                    ),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
                 Container(
                   decoration: _backgroundBuilder(),
                   child: SafeArea(
@@ -293,14 +289,7 @@ _videoPlayer(){
                           _releaseDateBuilder(),
                           SizedBox(height: 15.0),
                           _overviewBuilder(),
-                          Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.only(left: 130.0),),
-                              IconButton(icon: new Icon(Icons.thumb_up_alt, size: 40.0,), onPressed: (){},),
-                              Padding(padding: EdgeInsets.only(left: 30.0),),
-                              IconButton(icon: new Icon(Icons.thumb_down_alt, size: 40.0,), onPressed: (){},),
-                            ],
-                          ),
+                          _likeDislikeBuilder(),
                         ],
                       ),
                     ),

@@ -94,13 +94,19 @@ class _MovieSwipeState extends State<MovieSwipe> {
 }
 
 //  Swipe card constructor
-class CardBuilder extends StatelessWidget {
+class CardBuilder extends StatefulWidget {
   final List<Movie> movies;
   final MovieBloc bloc;
   final int genreID;
 
   const CardBuilder({Key key, this.movies, this.bloc, this.genreID}) : super(key: key);
 
+  @override
+  _CardBuilderState createState() => _CardBuilderState();
+}
+
+class _CardBuilderState extends State<CardBuilder> {
+  CardController _controller;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -110,7 +116,8 @@ class CardBuilder extends StatelessWidget {
             padding: EdgeInsets.only(top: 60),
             height: MediaQuery.of(context).size.height * 0.9,
             child: new TinderSwapCard(
-              totalNum: movies != null ? movies.length : 0,
+              cardController: _controller,
+              totalNum: widget.movies != null ? widget.movies.length : 0,
               stackNum: 3,
               orientation: AmassOrientation.TOP,
               maxWidth: MediaQuery.of(context).size.width * 0.9,
@@ -126,16 +133,18 @@ class CardBuilder extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(1.5),
                         child: Image.network(
-                          IMAGEURL + movies[index].posterPath,
+                          IMAGEURL + widget.movies[index].posterPath,
                           fit: BoxFit.fill,
                         ),
                       ),
                     ),
-                    onTap: () =>
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
-                          builder: (BuildContext context) {
-                            return new MovieScreen(movies[index].id);
-                          },),),
+                    onTap: () async {
+                    var temp = await Navigator.push(
+                        context, new MaterialPageRoute(builder: (context) => MovieScreen(widget.movies[index].id)));
+                      if(temp == widget.movies[index].id){
+                        _controller.triggerRight();
+                      }
+                    }
                   ),
 
               //Get orientation and index of swiped card
@@ -143,15 +152,15 @@ class CardBuilder extends StatelessWidget {
                   int index) {
                 var currentIndex = index;
                 if(currentIndex >= 19){
-                  if(genreID == 0){
-                    bloc.fetchNextPage();
+                  if(widget.genreID == 0){
+                    widget.bloc.fetchNextPage();
                   }else{
-                    bloc.fetchGenreNextPage();
+                    widget.bloc.fetchGenreNextPage();
                   }
                 }
                 print("$currentIndex ${orientation.toString()}");
                 if (orientation == CardSwipeOrientation.RIGHT) {
-                  addMovies(movies[index]);
+                  addMovies(widget.movies[index]);
                 }
               },
             ),
