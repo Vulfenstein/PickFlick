@@ -112,7 +112,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     child: new Text(value),);
                 }).toList(),
                 onChanged: (String input){
-                    topBarSelection(input);
+                    topBarSelection(input, context);
                 },
                 icon: new Icon(Icons.dehaze, color: Colors.white,),
                 dropdownColor: Color(0xFF36aaa8),),

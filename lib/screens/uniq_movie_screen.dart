@@ -4,6 +4,7 @@ import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:pick_flick/utilities/helper_functions.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:pick_flick/networks/firebase.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -214,7 +215,7 @@ class _MovieScreenState extends State<MovieScreen> {
         },),
         Padding(padding: EdgeInsets.only(left: 30.0),),
         IconButton(icon: new Icon(Icons.thumb_up_alt, size: 40.0,), onPressed: (){
-          uniqMovieAdd(detail['id'], detail['poster_path']);
+          uniqueMovieAdd(detail['id'], detail['poster_path']);
           Navigator.pop(context, detail['id']);
         },),
       ],

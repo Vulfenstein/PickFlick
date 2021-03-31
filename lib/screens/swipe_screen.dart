@@ -7,6 +7,7 @@ import 'package:pick_flick/utilities/widgets.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:pick_flick/utilities/screen_export.dart';
 import 'package:pick_flick/utilities/constants.dart';
+import 'package:pick_flick/networks/firebase.dart';
 
 
 class MovieSwipe extends StatefulWidget {

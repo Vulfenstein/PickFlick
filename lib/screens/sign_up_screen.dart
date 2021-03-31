@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pick_flick/networks/authentication.dart';
+import 'package:pick_flick/networks/firebase.dart';
 import 'package:pick_flick/utilities/widgets.dart';
 import 'package:pick_flick/screens/login_screen.dart';
 
@@ -15,6 +15,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 // ----------------------------------------------------------------------------//
   String _email;
   String _password;
+  String _username;
 
 // ----------------------------------------------------------------------------//
 //  'email' + email text box
@@ -103,6 +104,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   // ----------------------------------------------------------------------------//
+//  'password' + password text box
+// ----------------------------------------------------------------------------//
+  _usernameBuilder() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "User Name",
+          style: TextStyle(color: Colors.white),
+        ),
+        SizedBox(
+          height: 5.0,
+        ),
+        Container(
+            alignment: Alignment.centerLeft,
+            height: 60.0,
+            child: TextField(
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                fillColor: Colors.black,
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide(color: Colors.white, width: 0.5),
+                ),
+                prefixIcon: Icon(
+                  Icons.account_circle_rounded,
+                  color: Colors.white,
+                ),
+                hintText: "Name",
+                hintStyle: TextStyle(color: Colors.black),
+              ),
+              onChanged: (_value) {
+                _username = _value;
+              },
+            )),
+      ],
+    );
+  }
+
+  // ----------------------------------------------------------------------------//
 //  sign up button
 // ----------------------------------------------------------------------------//
   _signUpButtonBuilder() {
@@ -112,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          firebaseSignup(context, _email, _password);
+          firebaseSignup(context, _email, _password, _username);
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -186,6 +229,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: <Widget>[
                   textBuilder('Sign Up'),
                   SizedBox(height: 50.0),
+                  _usernameBuilder(),
+                  SizedBox(height: 10.0),
                   _emailBuilder(),
                   SizedBox(height: 10.0),
                   _passwordBuilder(),

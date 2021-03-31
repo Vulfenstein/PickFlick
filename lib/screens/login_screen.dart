@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pick_flick/utilities/screen_export.dart';
 import 'package:pick_flick/utilities/widgets.dart';
-import 'package:pick_flick/networks/authentication.dart';
+import 'package:pick_flick/networks/firebase.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

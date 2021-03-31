@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pick_flick/models/movie_list.dart';
 import 'package:flutter/material.dart';
+import 'package:pick_flick/screens/friends_screen.dart';
 import 'package:pick_flick/screens/login_screen.dart';
 
 // ----------------------------------------------------------------------------//
@@ -55,32 +54,11 @@ class ApiResponse<T> {
     return "Status : $status \n Message : $message \n Data : $data";
   }
 }
-
 enum Status { LOADING, COMPLETED, ERROR }
 
-//  Add liked movie id and poster to database
-void addMovies(Movie movie) {
-  final firestoreInstance = FirebaseFirestore.instance;
-  var firebaseUser =  FirebaseAuth.instance.currentUser;
-  firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-    "Movie Details": FieldValue.arrayUnion([movie.id, movie.posterPath],),
-  },SetOptions(merge: true)).then((_) {
-    print("added");
-  });
-}
-
-//  Add movie from unique page
-void uniqMovieAdd(int id, String posterPath) {
-  final firestoreInstance = FirebaseFirestore.instance;
-  var firebaseUser =  FirebaseAuth.instance.currentUser;
-  firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-    "Movie Details": FieldValue.arrayUnion([id, posterPath],),
-  },SetOptions(merge: true)).then((_) {
-    print("added");
-  });
-}
-
-// convert movie genre string to integer
+// ----------------------------------------------------------------------------//
+//  Convert movie genre string to integer
+// ----------------------------------------------------------------------------//
 int getVal(String genre){
   switch(genre){
     case 'Popular':
@@ -106,17 +84,21 @@ int getVal(String genre){
   }
 }
 
-//  Convert total minutes to hours and minutes.
+// ----------------------------------------------------------------------------//
+//   Convert total minutes to hours and minutes
+// ----------------------------------------------------------------------------//
 String durationToString(int minutes) {
   var d = Duration(minutes: minutes);
   List<String> parts = d.toString().split(':');
   return '${parts[0]}h ${parts[1].padLeft(2, '0')}m';
 }
 
-// Home screen top bar navigation handler
-void topBarSelection(String selection) async{
-  if(selection == 'Friends'){
-    print("friends pressed");
+// ----------------------------------------------------------------------------//
+//   Home screen top bar navigation handler
+// ----------------------------------------------------------------------------//
+void topBarSelection(String selection, context) async{
+  if(selection == 'Friends') {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FriendsScreen()));
   }
   else if(selection == 'Settings'){
     print("settings pressed");
@@ -124,7 +106,7 @@ void topBarSelection(String selection) async{
   else if(selection == "Log Out"){
     try{
       await FirebaseAuth.instance.signOut();
-      new LoginScreen();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
     }
     catch(e){
       print("error signing out");
