@@ -24,14 +24,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_tindercard: ^0.2.0
-  firebase_core: ^1.0.0
-  firebase_auth: ^1.0.0
+  firebase_core: ^1.0.2
+  firebase_auth: ^1.0.1
   google_sign_in: ^4.5.9
   flutter_twitter_login: ^1.1.0
   http: ^0.13.0
-  palette_generator: ^0.2.3
   flutter_star_rating: ^0.0.3
-  youtube_player_flutter: ^7.0.0+7
+  youtube_player_flutter: ^8.0.0
   cloud_firestore: ^1.0.0
 
 

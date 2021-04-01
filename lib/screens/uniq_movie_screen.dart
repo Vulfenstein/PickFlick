@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:pick_flick/utilities/constants.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:pick_flick/utilities/helper_functions.dart';
@@ -19,7 +18,6 @@ class MovieScreen extends StatefulWidget {
 
 class _MovieScreenState extends State<MovieScreen> {
   YoutubePlayerController _controller;
-  PaletteColor colors;
   var detail;
   var movieTrailer;
 
@@ -211,12 +209,12 @@ class _MovieScreenState extends State<MovieScreen> {
       children: <Widget>[
         Padding(padding: EdgeInsets.only(left: 130.0),),
         IconButton(icon: new Icon(Icons.thumb_down_alt, size: 40.0,), onPressed: (){
-          Navigator.pop(context, detail['id']);
+          Navigator.pop(context);
         },),
         Padding(padding: EdgeInsets.only(left: 30.0),),
         IconButton(icon: new Icon(Icons.thumb_up_alt, size: 40.0,), onPressed: (){
           uniqueMovieAdd(detail['id'], detail['poster_path']);
-          Navigator.pop(context, detail['id']);
+          Navigator.pop(context);
         },),
       ],
     );

@@ -13,7 +13,7 @@ final firestoreInstance = FirebaseFirestore.instance;
 var firebaseUser =  FirebaseAuth.instance.currentUser;
 DocumentSnapshot ds;
 
-// ----------------------------------------------------------------------------//
+// ----------------------------------------------------------------------------//vu
 // Add Friends list
 // ----------------------------------------------------------------------------//
 _newFriendsList(context){
