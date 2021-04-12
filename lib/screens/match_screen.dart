@@ -20,6 +20,7 @@ class _MatchScreenState extends State<MatchScreen> {
     super.initState();
   }
 
+  // Get current users fire store information
   _getMyData() async {
     await firestoreInstance
         .collection("users")
@@ -32,70 +33,88 @@ class _MatchScreenState extends State<MatchScreen> {
             });
   }
 
+  // Wait for user data, then load match list
   @override
   Widget build(BuildContext context) {
-    BackgroundBuilder();
     return Container(
       child: FutureBuilder(
-        future:  _getMyData(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.active:
-            case ConnectionState.waiting:
-              return Loading();
-            case ConnectionState.done:
-                return MatchList(friends: friends);
-            default:
-              return Loading();
-          }
-        }),
+          future: _getMyData(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Loading();
+              case ConnectionState.done:
+                return MatchList(
+                  friends: friends,
+                  myMovies: myMovies,
+                );
+              default:
+                return Loading();
+            }
+          }),
     );
   }
 }
 
 class MatchList extends StatelessWidget {
-
   final List<dynamic> friends;
+  final List<dynamic> myMovies;
   final firestoreInstance = FirebaseFirestore.instance;
 
-  MatchList({Key key, this.friends}) : super(key: key);
+  MatchList({Key key, this.friends, this.myMovies}) : super(key: key);
 
-
-  _getFriendsMovies(String id) async{
+  //For each friend in friends list, get friends movie likes
+  _getFriendsMovies(String id) async {
     List<dynamic> friendsMovies = [];
-    await firestoreInstance.collection("users").doc(id).get()
-        .then((snap) =>
-    {
-      friendsMovies = snap["movies"],
-    });
-    print(friendsMovies);
+    await firestoreInstance.collection("users").doc(id).get().then(
+          (snap) => {
+            friendsMovies = snap["movies"],
+          },
+        );
     return friendsMovies;
+  }
+
+  //Compare users liked movies and find friends that have the same matches
+  _getMatches(List<dynamic> myMovies, List<dynamic> friendsMovie) {
+    List<dynamic> matched = [];
+    for (var i = 0; i < myMovies.length; i++) {
+      if (friendsMovie.contains(myMovies[i])) {
+        matched.add(myMovies[i]);
+      }
+    }
+    return matched;
   }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-        itemCount: friends.length,
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-        itemBuilder: (BuildContext context, int index){
-          return Column(children: <Widget>[
+      itemCount: friends.length,
+      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          children: <Widget>[
             Text(friends[index]),
             FutureBuilder(
               future: _getFriendsMovies(friends[index].toString()),
-              builder: (context, snapshot){
+              builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.active:
                   case ConnectionState.waiting:
                     return Loading();
                   case ConnectionState.done:
+                    List<dynamic> matches;
+                    matches = _getMatches(myMovies, snapshot.data);
+                    if (matches.isNotEmpty) print(matches);
                     return Text(snapshot.data.toString());
                   default:
                     return Loading();
                 }
               },
             )
-          ]);
-        },
+          ],
+        );
+      },
     );
   }
 }
