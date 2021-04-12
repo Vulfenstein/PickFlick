@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pick_flick/screens/uniq_movie_screen.dart';
 import 'package:pick_flick/utilities/widgets.dart';
+import 'package:pick_flick/utilities/constants.dart';
 
 class MatchScreen extends StatefulWidget {
   @override
@@ -105,7 +109,15 @@ class MatchList extends StatelessWidget {
                   case ConnectionState.done:
                     List<dynamic> matches;
                     matches = _getMatches(myMovies, snapshot.data);
-                    if (matches.isNotEmpty) print(matches);
+                    if (matches.isNotEmpty){
+                      return Container(
+                          height: 250,
+                          child: Matches(movies: matches),
+                      );
+                    }
+                    else{
+                      return Text("No matches yet! Keep swiping!");
+                    }
                     return Text(snapshot.data.toString());
                   default:
                     return Loading();
@@ -114,6 +126,76 @@ class MatchList extends StatelessWidget {
             )
           ],
         );
+      },
+    );
+  }
+}
+
+class Matches extends StatefulWidget{
+
+  List<dynamic> movies;
+
+  Matches({Key key, this.movies}) : super(key: key);
+
+  @override
+  _MatchesState createState() => _MatchesState();
+}
+
+class _MatchesState extends State<Matches> {
+  List<dynamic>movieInfo = [];
+
+  Future getData() async {
+    for(var i = 0; i < widget.movies.length; i++) {
+      var data = await getJson(widget.movies[i].toString());
+      movieInfo.add(data);
+    }
+    return movieInfo;
+  }
+
+  // ignore: missing_return
+  Future<Map> getJson(String id) async {
+    try {
+      var url =
+          MOVIE_URL + id.toString() + API_ATTACHMENT + API_KEY;
+      Uri uri = Uri.parse(url);
+      var response = await http.get(uri);
+      return json.decode(response.body);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return FutureBuilder(
+      future: getData(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return Loading();
+          case ConnectionState.done:
+            return ListView.builder(
+              itemCount: movieInfo.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index){
+                return GestureDetector(
+                  child: Container(
+                    child: Image.network(
+                      IMAGEURL + movieInfo[index]['poster_path'],
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                    onTap: () async {
+                     await Navigator.push(context, new MaterialPageRoute(builder: (context) => MovieScreen(movieInfo[index]['id'])));
+                    }
+                );
+              },
+            );
+           // return Text(snapshot.data.toString());
+          default:
+            return Loading();
+        }
       },
     );
   }
