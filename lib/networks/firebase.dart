@@ -5,6 +5,7 @@ import 'package:pick_flick/screens/login_screen.dart';
 import 'package:pick_flick/utilities/error_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pick_flick/models/movie_list.dart';
+import 'package:pick_flick/models/match_movies.dart';
 
 // ----------------------------------------------------------------------------//
 //  Variables
@@ -95,10 +96,14 @@ firebaseSignup(context, String email, String password, String name) async {
     final firestoreInstance = FirebaseFirestore.instance;
     var firebaseUser =  FirebaseAuth.instance.currentUser;
     firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-      "Name": name,
-      "Pending Friends": [],
-      "Friends": [],
+      "name": name,
+      "pendingFriends": [],
+      "friends": [],
+      "friendsNames": [],
       "id": firebaseUser.uid,
+      "hasFriends": false,
+      "hasPending": false,
+      "movies": [],
     },SetOptions(merge: true)).then((_) {
       print("initial document added");
     });
@@ -131,7 +136,7 @@ void addMovies(Movie movie) {
   final firestoreInstance = FirebaseFirestore.instance;
   var firebaseUser =  FirebaseAuth.instance.currentUser;
   firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-    "Movie Details": FieldValue.arrayUnion([movie.id, movie.posterPath],),
+    "movies": FieldValue.arrayUnion([movie.id],),
   },SetOptions(merge: true)).then((_) {
     print("swipe movie added");
   });
@@ -144,9 +149,9 @@ void uniqueMovieAdd(int id, String posterPath) {
   final firestoreInstance = FirebaseFirestore.instance;
   var firebaseUser =  FirebaseAuth.instance.currentUser;
   firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-    "Movie Details": FieldValue.arrayUnion([id, posterPath],),
+    "movies": FieldValue.arrayUnion([id],),
   },SetOptions(merge: true)).then((_) {
-    print("unique page movie added");
+    print("swipe movie added");
   });
 }
 
@@ -158,7 +163,8 @@ void pendingFriendAdd(String friend){
   var firebaseUser =  FirebaseAuth.instance.currentUser;
 
   firestoreInstance.collection("users").doc(friend).set({
-    "Pending Friends": FieldValue.arrayUnion([firebaseUser.uid],),
+    "pendingFriends": FieldValue.arrayUnion([firebaseUser.uid],),
+    "hasPending": true,
   },SetOptions(merge: true)).then((_) {
     print("pending friend 2 to 1");
   });
@@ -173,19 +179,21 @@ void friendAdd(String friend){
 
   //add to friends list for logged in user
   firestoreInstance.collection("users").doc(firebaseUser.uid).set({
-    "Friends": FieldValue.arrayUnion([friend],),
+    "hasFriends": true,
+    "friends": FieldValue.arrayUnion([friend],),
   },SetOptions(merge: true)).then((_) {
     print("pending friend 1 to 2");
   });
   //add logged in user to other users friends list
   firestoreInstance.collection("users").doc(friend).set({
-    "Friends": FieldValue.arrayUnion([firebaseUser.uid],),
+    "hasFriends": true,
+    "friends": FieldValue.arrayUnion([firebaseUser.uid],),
   },SetOptions(merge: true)).then((_) {
     print("pending friend 2 to 1");
   });
 
   //remove from pending list
   firestoreInstance.collection("users").doc(firebaseUser.uid).update({
-    "Pending Friends": FieldValue.arrayRemove([friend]),
+    "pendingFriends": FieldValue.arrayRemove([friend]),
   });
 }

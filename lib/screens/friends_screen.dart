@@ -29,7 +29,7 @@ _newFriendsList(context){
                 child: new Container(
                   height: 50,
                   color: Colors.transparent,
-                  child: Center(child: Text(ds["Name"], style: TextStyle(color: Colors.white))),
+                  child: Center(child: Text(ds["name"], style: TextStyle(color: Colors.white))),
                 ),
                 onPressed: () {
                   pendingFriendAdd(ds["id"]);
@@ -47,13 +47,15 @@ _newFriendsList(context){
 // Get firebase pending/friends list
 // ----------------------------------------------------------------------------//
 Future<List<dynamic>> getList(String val) async{
-  DocumentReference docRef = firestoreInstance.collection("users").doc(firebaseUser.uid);
+  DocumentReference docRef = await firestoreInstance.collection("users").doc(firebaseUser.uid);
   print(firebaseUser.uid);
 
   return docRef.get().then((datasnapshot) {
-    print(datasnapshot);
     if(datasnapshot.exists){
-      List<dynamic> info = datasnapshot[val].toList();
+      List<dynamic> info = datasnapshot[val];
+      for(var i = 0; i < info.length; i++){
+        print(info[i]);
+      }
       return info;
     }
     return null;
@@ -79,7 +81,7 @@ _fpList(context, String friendType){
                   child: Center(
                     child: Text(snapshot.data[index], style: TextStyle(color: Colors.white))),
                   onPressed: (){
-                    if(friendType == "Pending Friends"){
+                    if(friendType == "pendingFriends"){
                       friendAdd(snapshot.data[index]);
                     }
                   },
@@ -120,11 +122,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   SizedBox(height: 30,),
                   SizedBox(child: Text("My Friends", style: TextStyle(fontSize: 26, color: Colors.white))),
                   SizedBox(height: 10,),
-                  _fpList(context, "Friends"),
+                  _fpList(context, "friends"),
                   SizedBox(height: 30,),
                   SizedBox(child: Text("Pending", style: TextStyle(fontSize: 26, color: Colors.white))),
                   SizedBox(height: 10,),
-                  _fpList(context, "Pending Friends"),
+                  _fpList(context, "pendingFriends"),
                 ],
               ),
             ),
