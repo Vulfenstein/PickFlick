@@ -12,6 +12,7 @@ class FriendsScreen extends StatefulWidget {
 final firestoreInstance = FirebaseFirestore.instance;
 var firebaseUser =  FirebaseAuth.instance.currentUser;
 DocumentSnapshot ds;
+var id;
 
 // ----------------------------------------------------------------------------//vu
 // Add Friends list
@@ -32,7 +33,7 @@ _newFriendsList(context){
                   child: Center(child: Text(ds["name"], style: TextStyle(color: Colors.white))),
                 ),
                 onPressed: () {
-                  pendingFriendAdd(ds["id"]);
+                  pendingFriendAdd(snapshot.data.docs[index]['id']);
                 }
             );
           },

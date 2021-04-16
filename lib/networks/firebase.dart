@@ -161,6 +161,8 @@ void uniqueMovieAdd(int id, String posterPath) {
 void pendingFriendAdd(String friend){
   final firestoreInstance = FirebaseFirestore.instance;
   var firebaseUser =  FirebaseAuth.instance.currentUser;
+  print(friend);
+
 
   firestoreInstance.collection("users").doc(friend).set({
     "pendingFriends": FieldValue.arrayUnion([firebaseUser.uid],),

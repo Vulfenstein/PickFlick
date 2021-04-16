@@ -41,22 +41,35 @@ class _MatchScreenState extends State<MatchScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder(
-          future: _getMyData(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Loading();
-              case ConnectionState.done:
-                return MatchList(
-                  friends: friends,
-                  myMovies: myMovies,
-                );
-              default:
-                return Loading();
-            }
-          }),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(BACKGROUND_COLOR_1),
+            Color(BACKGROUND_COLOR_2),
+            Color(BACKGROUND_COLOR_3),
+          ]
+        )
+      ),
+      child: Container(
+        child: FutureBuilder(
+            future: _getMyData(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Loading();
+                case ConnectionState.done:
+                  return MatchList(
+                    friends: friends,
+                    myMovies: myMovies,
+                  );
+                default:
+                  return Loading();
+              }
+            }),
+      ),
     );
   }
 }
@@ -92,41 +105,48 @@ class MatchList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: friends.length,
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-      itemBuilder: (BuildContext context, int index) {
-        return Column(
-          children: <Widget>[
-            Text(friends[index]),
-            FutureBuilder(
-              future: _getFriendsMovies(friends[index].toString()),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.active:
-                  case ConnectionState.waiting:
-                    return Loading();
-                  case ConnectionState.done:
-                    List<dynamic> matches;
-                    matches = _getMatches(myMovies, snapshot.data);
-                    if (matches.isNotEmpty){
-                      return Container(
-                          height: 250,
-                          child: Matches(movies: matches),
-                      );
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
+      child: GridView.builder(
+        itemCount: friends.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1, childAspectRatio: 2),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            child: Column(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                Text(friends[index], style: TextStyle(color: Colors.white),),
+                Padding(padding: EdgeInsets.symmetric(vertical: 2)),
+                FutureBuilder(
+                  future: _getFriendsMovies(friends[index].toString()),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.active:
+                      case ConnectionState.waiting:
+                        return Loading();
+                      case ConnectionState.done:
+                        List<dynamic> matches;
+                        matches = _getMatches(myMovies, snapshot.data);
+                        if (matches.isNotEmpty){
+                          return Container(
+                              height: 150,
+                              child: Matches(movies: matches),
+                          );
+                        }
+                        else{
+                          return Text("No matches yet! Keep swiping!", style: TextStyle(color: Colors.white),);
+                        }
+                        return Text(snapshot.data.toString());
+                      default:
+                        return Loading();
                     }
-                    else{
-                      return Text("No matches yet! Keep swiping!");
-                    }
-                    return Text(snapshot.data.toString());
-                  default:
-                    return Loading();
-                }
-              },
-            )
-          ],
-        );
-      },
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -181,9 +201,12 @@ class _MatchesState extends State<Matches> {
               itemBuilder: (context, index){
                 return GestureDetector(
                   child: Container(
-                    child: Image.network(
-                      IMAGEURL + movieInfo[index]['poster_path'],
-                      fit: BoxFit.fill,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Image.network(
+                        IMAGEURL + movieInfo[index]['poster_path'],
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                     onTap: () async {
