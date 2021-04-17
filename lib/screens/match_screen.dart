@@ -18,9 +18,10 @@ class _MatchScreenState extends State<MatchScreen> {
   List<dynamic> friends = [];
   List<dynamic> myMovies;
   var name;
+  var mydata;
 
   void initState() {
-    _getMyData();
+    mydata = _getMyData();
     super.initState();
   }
 
@@ -54,7 +55,7 @@ class _MatchScreenState extends State<MatchScreen> {
       ),
       child: Container(
         child: FutureBuilder(
-            future: _getMyData(),
+            future: mydata,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.active:
@@ -103,6 +104,16 @@ class MatchList extends StatelessWidget {
     return matched;
   }
 
+  _getFriendsName(String id) async {
+    var name;
+    await firestoreInstance.collection("users").doc(id).get().then(
+        (snap) => {
+          name = snap["name"],
+        }
+    );
+    return name;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -115,7 +126,21 @@ class MatchList extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                Text(friends[index], style: TextStyle(color: Colors.white),),
+                FutureBuilder(
+                  future: _getFriendsName(friends[index].toString()),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.active:
+                      case ConnectionState.waiting:
+                        return Loading();
+                      case ConnectionState.done:
+                        return Text(snapshot.data.toString(), style: TextStyle(color: Colors.white, fontSize: 14),);
+                      default:
+                        return Loading();
+                    }
+                  },
+                ),
+               // Text(friends[index], style: TextStyle(color: Colors.white),),
                 Padding(padding: EdgeInsets.symmetric(vertical: 2)),
                 FutureBuilder(
                   future: _getFriendsMovies(friends[index].toString()),
