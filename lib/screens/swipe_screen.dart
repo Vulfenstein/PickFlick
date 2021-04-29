@@ -10,6 +10,7 @@ import 'package:pick_flick/utilities/constants.dart';
 import 'package:pick_flick/networks/firebase.dart';
 
 
+
 class MovieSwipe extends StatefulWidget {
   @override
   _MovieSwipeState createState() => _MovieSwipeState();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pick_flick/models/messages.dart';
+import 'package:pick_flick/screens/friends_screen.dart';
 import 'package:pick_flick/screens/login_screen.dart';
 import 'package:pick_flick/utilities/error_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -198,4 +200,40 @@ void friendAdd(String friend){
   firestoreInstance.collection("users").doc(firebaseUser.uid).update({
     "pendingFriends": FieldValue.arrayRemove([friend]),
   });
+}
+
+class DatabaseMethods{
+  createChatRoom(String chatRoomId, chatRoomMap){
+    firestoreInstance.collection("ChatRoom")
+        .doc(chatRoomId).set(chatRoomMap).catchError((e){
+          print(e.toString());
+    });
+  }
+}
+
+void chatCreation(String friendId){
+  final firestoreInstance = FirebaseFirestore.instance;
+  var firebaseUser =  FirebaseAuth.instance.currentUser;
+  List<Map<String, String>> messages = [{
+    "messageContent" : "hello", "sender" : firebaseUser.uid, "time" : DateTime.now().toString(),
+  }];
+  
+  firestoreInstance.collection("ChatRoom").doc(firebaseUser.uid + "_" + friendId).set({
+    "user1" : firebaseUser.uid,
+    "user2" : friendId,
+    "messages": messages,
+  });
+}
+
+void sendMessage(String friendId, String message){
+  final firestoreInstance = FirebaseFirestore.instance;
+  var firebaseUser =  FirebaseAuth.instance.currentUser;
+
+  List<Map<String, String>> newMessage = [{
+    "messageContent": message, "sender" : firebaseUser.uid, "time" : DateTime.now().toString(),
+  }];
+
+  firestoreInstance.collection("ChatRoom").doc(firebaseUser.uid + "_" + friendId).update(
+      {"messages" : FieldValue.arrayUnion(newMessage)});
+
 }
