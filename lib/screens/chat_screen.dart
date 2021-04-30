@@ -121,9 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
             case ConnectionState.waiting:
               return Loading();
             case ConnectionState.done:
-              return Conversations(
-                friends: ids,
-              );
+              return Conversations(friends: ids);
             default:
               return Loading();
           }
@@ -176,6 +174,7 @@ class ConversationList extends StatefulWidget {
 }
 
 class _ConversationListState extends State<ConversationList> {
+  bool chatCheck = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

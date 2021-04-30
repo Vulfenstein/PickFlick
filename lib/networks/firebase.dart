@@ -1,13 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pick_flick/models/messages.dart';
-import 'package:pick_flick/screens/friends_screen.dart';
 import 'package:pick_flick/screens/login_screen.dart';
 import 'package:pick_flick/utilities/error_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pick_flick/models/movie_list.dart';
-import 'package:pick_flick/models/match_movies.dart';
 
 // ----------------------------------------------------------------------------//
 //  Variables
@@ -202,26 +200,35 @@ void friendAdd(String friend){
   });
 }
 
-class DatabaseMethods{
-  createChatRoom(String chatRoomId, chatRoomMap){
-    firestoreInstance.collection("ChatRoom")
-        .doc(chatRoomId).set(chatRoomMap).catchError((e){
-          print(e.toString());
-    });
-  }
-}
-
 void chatCreation(String friendId){
   final firestoreInstance = FirebaseFirestore.instance;
   var firebaseUser =  FirebaseAuth.instance.currentUser;
+  StreamSubscription<DocumentSnapshot> sub, sub2;
+  final DocumentReference documentReference1 = firestoreInstance.collection("ChatRoom").doc(friendId + "_" + firebaseUser.uid);
+  final DocumentReference documentReference2 = firestoreInstance.collection("ChatRoom").doc(firebaseUser.uid + "_" + friendId);
+
   List<Map<String, String>> messages = [{
-    "messageContent" : "hello", "sender" : firebaseUser.uid, "time" : DateTime.now().toString(),
+    "messageContent" : "", "sender" : firebaseUser.uid, "time" : DateTime.now().toString(),
   }];
-  
-  firestoreInstance.collection("ChatRoom").doc(firebaseUser.uid + "_" + friendId).set({
-    "user1" : firebaseUser.uid,
-    "user2" : friendId,
-    "messages": messages,
+
+  sub = documentReference1.snapshots().listen((datasnapshot) async{
+    if(datasnapshot.exists){
+      print("Friend started chat");
+    }
+    else{
+        sub2 = documentReference2.snapshots().listen((snap) async{
+        if(snap.exists){
+          print("You started chat");
+        }
+        else{
+          firestoreInstance.collection("ChatRoom").doc(firebaseUser.uid + "_" + friendId).set({
+            "user1" : firebaseUser.uid,
+            "user2" : friendId,
+            "messages": messages,
+          });
+        }
+      });
+    }
   });
 }
 
@@ -233,7 +240,17 @@ void sendMessage(String friendId, String message){
     "messageContent": message, "sender" : firebaseUser.uid, "time" : DateTime.now().toString(),
   }];
 
-  firestoreInstance.collection("ChatRoom").doc(firebaseUser.uid + "_" + friendId).update(
-      {"messages" : FieldValue.arrayUnion(newMessage)});
+  try {
+    firestoreInstance.collection("ChatRoom").doc(
+        firebaseUser.uid + "_" + friendId).update(
+        {"messages": FieldValue.arrayUnion(newMessage)});
+  }catch(e){
+  }
+
+  try{
+    firestoreInstance.collection("ChatRoom").doc(friendId + "_" + firebaseUser.uid).update(
+        {"messages" : FieldValue.arrayUnion(newMessage)});
+  }catch(e){
+  }
 
 }
