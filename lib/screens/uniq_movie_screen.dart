@@ -272,7 +272,7 @@ _videoPlayer(){
                   child: SafeArea(
                     child: Container(
                       width: double.infinity,
-                      height: 735.2,
+                      height: 900.2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,

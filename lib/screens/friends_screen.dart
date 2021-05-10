@@ -63,6 +63,18 @@ Future<List<dynamic>> getList(String val) async{
   });
 }
 
+
+_getName(String id) async {
+  var name;
+  final firestoreInstance = FirebaseFirestore.instance;
+  await firestoreInstance.collection("users").doc(id).get().then(
+          (snap) => {
+        name = snap["name"],
+      }
+  );
+  return name;
+}
+
 // ----------------------------------------------------------------------------//
 // Create pending/friends list view builder
 // ----------------------------------------------------------------------------//
@@ -75,18 +87,31 @@ _fpList(context, String friendType){
           shrinkWrap: true,
           itemCount: snapshot.data.length,
           itemBuilder: (context, index){
-            return new Container(
-              height: 50,
-              color: Colors.transparent,
-              child: OutlinedButton(
-                  child: Center(
-                    child: Text(snapshot.data[index], style: TextStyle(color: Colors.white))),
-                  onPressed: (){
-                    if(friendType == "pendingFriends"){
-                      friendAdd(snapshot.data[index]);
-                    }
-                  },
-              ),
+            return FutureBuilder(
+              future: _getName(snapshot.data[index].toString()),
+              builder: (context, snap) {
+                switch (snap.connectionState) {
+                  case ConnectionState.active:
+                  case ConnectionState.waiting:
+                    return Loading();
+                  case ConnectionState.done:
+                    return new Container(
+                      height: 50,
+                      color: Colors.transparent,
+                      child: OutlinedButton(
+                        child: Center(
+                            child: Text(snap.data, style: TextStyle(color: Colors.white))),
+                        onPressed: (){
+                          if(friendType == "pendingFriends"){
+                            friendAdd(snapshot.data[index]);
+                          }
+                        },
+                      ),
+                    );
+                  default:
+                    return Loading();
+                }
+              },
             );
           },
         );

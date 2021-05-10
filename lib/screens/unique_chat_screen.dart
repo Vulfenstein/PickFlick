@@ -64,6 +64,7 @@ class _UniqueChatState extends State<UniqueChat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Color(0xFF14575d),
         title: Text("Chat Screen"),

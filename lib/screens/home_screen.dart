@@ -23,7 +23,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   TextEditingController _controller;
   Icon searchIcon = new Icon(Icons.search);
   Widget pageTitle = new Text("Pick Flick");
-  List <String> categories = ["Friends","Settings", "Log Out"];
+  List <String> categories = ["Friends", "Log Out"];
 
   void changeScreen(int index) {
     setState(() {

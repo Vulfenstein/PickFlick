@@ -7,67 +7,6 @@ import 'package:pick_flick/utilities/widgets.dart';
 import 'package:pick_flick/screens/unique_chat_screen.dart';
 import 'package:pick_flick/networks/firebase.dart';
 
-// class ChatScreen extends StatefulWidget {
-//
-//   @override
-//   _ChatScreenState createState() => _ChatScreenState();
-// }
-//
-// class _ChatScreenState extends State<ChatScreen> {
-//
-//   List<Messages> chatUsers = [
-//     Messages(name: "Jane Russel", messageText: "Awesome Setup", imageURL: "images/userImage1.jpeg", time: "Now"),
-//     Messages(name: "Glady's Murphy", messageText: "That's Great", imageURL: "images/userImage2.jpeg", time: "Yesterday"),
-//     Messages(name: "Jorge Henry", messageText: "Hey where are you?", imageURL: "images/userImage3.jpeg", time: "31 Mar"),
-//     Messages(name: "Philip Fox", messageText: "Busy! Call me in 20 mins", imageURL: "images/userImage4.jpeg", time: "28 Mar"),
-//     Messages(name: "Debra Hawkins", messageText: "Thankyou, It's awesome", imageURL: "images/userImage5.jpeg", time: "23 Mar"),
-//     Messages(name: "Jacob Pena", messageText: "will update you in evening", imageURL: "images/userImage6.jpeg", time: "17 Mar"),
-//     Messages(name: "Andrey Jones", messageText: "Can you please share the file?", imageURL: "images/userImage7.jpeg", time: "24 Feb"),
-//     Messages(name: "John Wick", messageText: "How are you?", imageURL: "images/userImage8.jpeg", time: "18 Feb"),
-//   ];
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SingleChildScrollView(
-//         physics: BouncingScrollPhysics(),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: <Widget>[
-//             SafeArea(
-//               child: Padding(
-//                 padding: EdgeInsets.only(left: 16, right: 16, top: 10),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: <Widget>[
-//                     Text("Conversations", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             ListView.builder(
-//               itemCount: chatUsers.length,
-//               shrinkWrap: true,
-//               padding: EdgeInsets.only(top: 16),
-//               physics: NeverScrollableScrollPhysics(),
-//               itemBuilder: (context, index){
-//                 return ConversationList(
-//                   name: chatUsers[index].name,
-//                   messageText: chatUsers[index].messageText,
-//                   imageUrl: chatUsers[index].imageURL,
-//                   time: chatUsers[index].time,
-//                   isMessageRead: (index == 0 || index == 3)?true:false,
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class ChatScreen extends StatefulWidget {
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -135,6 +74,19 @@ class Conversations extends StatelessWidget {
   final List<dynamic> friends;
   const Conversations({Key key, this.friends}) : super(key: key);
 
+  _getName(String id) async {
+    var name;
+    final firestoreInstance = FirebaseFirestore.instance;
+    await firestoreInstance.collection("users").doc(id).get().then(
+            (snap) => {
+          name = snap["name"],
+        }
+    );
+    return name;
+  }
+  static const message = ['Where are you??', 'Spider man?', 'Send first message', 'what time did we say again?', 'Hello!', 'I LOVED that move!'];
+  static const times = ['Yesterday', '1:30pm', 'May 18th', 'May 13th', '10:22am'];
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -142,13 +94,27 @@ class Conversations extends StatelessWidget {
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 16),
       physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return ConversationList(
-          name: friends[index],
-          messageText: "testing",
-          imageUrl: "hello",
-          time: "12:00",
-          isMessageRead: (index == 0 || index == 3) ? true : false,
+      itemBuilder: (BuildContext context, index) {
+        return FutureBuilder(
+          future: _getName(friends[index].toString()),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Loading();
+              case ConnectionState.done:
+                return ConversationList(
+                  id: friends[index],
+                  name: snapshot.data.toString(),
+                  messageText: message[index],
+                  imageUrl: "hello",
+                  time: times[index],
+                  isMessageRead: (index == 0 || index == 3) ? true : false,
+                );
+              default:
+                return Loading();
+            }
+          },
         );
       },
     );
@@ -156,6 +122,7 @@ class Conversations extends StatelessWidget {
 }
 
 class ConversationList extends StatefulWidget {
+  String id;
   String name;
   String messageText;
   String imageUrl;
@@ -163,7 +130,8 @@ class ConversationList extends StatefulWidget {
   bool isMessageRead;
 
   ConversationList(
-      {@required this.name,
+      {@required this.id,
+        @required this.name,
       @required this.messageText,
       @required this.imageUrl,
       @required this.time,
@@ -179,9 +147,9 @@ class _ConversationListState extends State<ConversationList> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        chatCreation(widget.name);
+        chatCreation(widget.id);
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return UniqueChat(friendId: widget.name);
+          return new UniqueChat(friendId: widget.id);
         }));
       },
       child: Container(
@@ -203,13 +171,13 @@ class _ConversationListState extends State<ConversationList> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(widget.name, style: TextStyle(fontSize: 13, color: Colors.white)),
+                          Text(widget.name, style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
                           SizedBox(height: 6),
                           Text(
                             widget.messageText,
                             style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey.shade500,
+                                fontSize: 15,
+                                color: Colors.grey.shade400,
                                 fontWeight: widget.isMessageRead
                                     ? FontWeight.bold
                                     : FontWeight.normal),
@@ -222,11 +190,7 @@ class _ConversationListState extends State<ConversationList> {
               ),
             ),
             Text(widget.time,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: widget.isMessageRead
-                        ? FontWeight.bold
-                        : FontWeight.normal)),
+                style: TextStyle(fontWeight: FontWeight.normal)),
           ],
         ),
       ),

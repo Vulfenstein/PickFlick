@@ -190,10 +190,10 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(
-                image: AssetImage("assets/images/google_logo.png"),
-                height: 25.0,
-              ),
+              // Image(
+              //   image: AssetImage("assets/images/google_logo.png"),
+              //   height: 25.0,
+              // ),
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
@@ -228,10 +228,10 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(
-                image: AssetImage("assets/images/twiiter_logo.png"),
-                height: 28.0,
-              ),
+              // Image(
+              //   image: AssetImage("assets/images/twiiter_logo.png"),
+              //   height: 28.0,
+              // ),
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
