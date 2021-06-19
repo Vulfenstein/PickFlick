@@ -2,5 +2,5 @@
 
 
 <p float="center">
-  <img src="CapstonePoster.png" width="240" height="490" />
+  <img src="CapstonePoster.png" width="720" height="500" />
 </p>
