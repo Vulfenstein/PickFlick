@@ -2,5 +2,5 @@
 
 
 <p float="center">
-  <img src="PickFlick/blob/main/CapstonePoster.png" width="240" height="490" />
+  <img src="PickFlick/CapstonePoster.png" width="240" height="490" />
 </p>
